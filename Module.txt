@@ -1,8 +1,9 @@
 ﻿Name: Codesanook.EventManagement
 AntiForgery: enabled
 Author: Codesanook Team
-Website: https://codesanook.com
+Website: https://www.codesanook.com
 Version: 1.0
 OrchardVersion: 1.10.3
 Description: Simple event management system
+Dependencies: Orchard.Projections
 
