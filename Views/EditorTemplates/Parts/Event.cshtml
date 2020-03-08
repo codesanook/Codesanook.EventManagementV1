@@ -1,7 +1,28 @@
 ﻿@using Orchard.Mvc.Extensions
-@model Codesanook.EventManagement.Models.EventPart
+@using Codesanook.EventManagement.ViewModels;
+@model EventViewModel
 
-Event part fields
-@*
-    TODO add fields here
-*@  
+<fieldset>
+    <label for="@Html.FieldIdFor(m => Model.BeginDateTimeEditor.Date)">@T("Begin datetime")</label>
+    @Html.EditorFor(m => m.BeginDateTimeEditor)
+    <span class="hint">@T("Provide a custom public url which will be used to proxy the local rss feed.")</span>
+    @Html.ValidationMessageFor(m => m.BeginDateTimeEditor)
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => Model.EndDateTimeEditor.Date)">@T("End datetime")</label>
+    @Html.EditorFor(m => m.EndDateTimeEditor)
+    @Html.ValidationMessageFor(m => m.EndDateTimeEditor)
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => Model.Location)">@T("Location")</label>
+    @Html.TextAreaFor(m => m.Location)
+    @Html.ValidationMessageFor(m => m.Location)
+</fieldset>
+
+<fieldset>
+    <label for="@Html.FieldIdFor(m => Model.MaxAttendees)">@T("Max attendees")</label>
+    @Html.TextBoxFor(m => m.MaxAttendees)
+    @Html.ValidationMessageFor(m => m.MaxAttendees)
+</fieldset>

@@ -100,7 +100,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\EventAdminController.cs" />
-    <Compile Include="Drivers\EventListpartDriver.cs" />
     <Compile Include="Drivers\EventPartDriver.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Handlers\EventPartHandler.cs" />
@@ -114,6 +113,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\IEventService.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

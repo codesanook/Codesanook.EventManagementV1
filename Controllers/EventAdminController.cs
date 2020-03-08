@@ -98,7 +98,7 @@ namespace Codesanook.EventManagement.Controllers {
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(listShape)
-                .Pager(pager);
+                .Pager(pagerShape);
 
             return View(viewModel);
         }

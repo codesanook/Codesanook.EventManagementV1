@@ -1,16 +1,22 @@
 ﻿using System.Linq;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents;
 using Orchard.Localization;
-using Orchard.Security;
+using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 
 namespace Codesanook.EventManagement {
     public class AdminMenu : INavigationProvider {
 
-        public Localizer T { get; set; }
+        private readonly IContentManager contentManager;
 
-        public AdminMenu() {
+        public AdminMenu(IContentManager contentManager) {
+            this.contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         // For admin menu
         public string MenuName => "admin";
@@ -34,10 +40,25 @@ namespace Codesanook.EventManagement {
                 )
              );
 
-            //menu.Add(
-            //    T("New event"), "1.1",
-            //    item => item.Action("Create2", "EventAdmin", new { area = "Codesanook.EventManagement" })
-            // );
+            var contentItem = contentManager.New("Event");
+            var contentItemMetadata = contentManager.GetItemMetadata(contentItem);
+            menu.Add(
+                T("New event"),
+                "1.1",
+                item => item.Action(
+                    contentItemMetadata.CreateRouteValues["Action"] as string,
+                    contentItemMetadata.CreateRouteValues["Controller"] as string,
+                    contentItemMetadata.CreateRouteValues
+                )
+                // Apply "CreateContent" permission for the content type
+                .Permission(
+                    DynamicPermissions.CreateDynamicPermission(
+                        DynamicPermissions.PermissionTemplates[Permissions.CreateContent.Name],
+                        contentItem.TypeDefinition
+                    )
+                )
+            );
+
         }
     }
 }
