@@ -10,9 +10,7 @@ namespace Codesanook.EventManagement.Blogs.Services {
     public class EventService : IEventService {
         private readonly IContentManager contentManager;
 
-        public EventService(
-            IContentManager contentManager
-        ) {
+        public EventService(IContentManager contentManager) {
             this.contentManager = contentManager;
         }
 

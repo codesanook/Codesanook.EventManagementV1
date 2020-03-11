@@ -1,0 +1,10 @@
+﻿@{
+    IEnumerable<object> events = Model.ContentItems;
+    //Model.ContentItems.Classes.Add("content-items");
+}
+
+@Display(Model.ContentItems)
+
+@if (events == null || events.Count() < 1) {
+<p>@T("No new upcoming events")</p>
+}

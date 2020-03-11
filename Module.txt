@@ -5,5 +5,5 @@ Website: https://www.codesanook.com
 Version: 1.0
 OrchardVersion: 1.10.3
 Description: Simple event management system
-Dependencies: Orchard.Projections
+Dependencies: Orchard.Projections, Orchard.Widgets
 

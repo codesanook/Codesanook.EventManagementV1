@@ -56,12 +56,6 @@ namespace Codesanook.EventManagement.Models {
             get => Record.MaxAttendees;
             set => Record.MaxAttendees = value;
         }
-
-        public EventListPart EventListPart {
-            get => this.As<ICommonPart>().Container.As<EventListPart>();
-            set => this.As<ICommonPart>().Container = value;
-        }
-
     }
 }
 
