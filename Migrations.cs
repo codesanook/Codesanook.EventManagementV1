@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Codesanook.EventManagement.Models;
 using Orchard;
 using Orchard.Autoroute.Models;
@@ -9,7 +8,6 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Navigation.Models;
-using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.Settings;
 using Orchard.Core.Title.Models;
 using Orchard.Data.Migration;
@@ -19,19 +17,15 @@ using Orchard.Projections.Models;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
-using Orchard.UI.Notify;
 using Orchard.Utility;
-using Orchard.Widgets.Services;
 
 namespace Codesanook.EventManagement {
     public class Migrations : DataMigrationImpl {
         private readonly IOrchardServices orchardServices;
         private readonly IAuthenticationService authenticationService;
         private readonly IContentManager contentManager;
-        private readonly IMenuService menuService;
         private readonly INavigationManager navigationManager;
         private readonly Lazy<IAutorouteService> autorouteService;
-        private readonly IWidgetsService widgetsService;
         private readonly ISiteService siteService;
         private readonly IMembershipService membershipService;
 
@@ -42,20 +36,16 @@ namespace Codesanook.EventManagement {
             IOrchardServices orchardServices,
             IAuthenticationService authenticationService,
             IContentManager contentManager,
-            IMenuService menuService,
             INavigationManager navigationManager,
             Lazy<IAutorouteService> autorouteService,
-            IWidgetsService widgetsService,
             ISiteService siteService,
             IMembershipService membershipService
         ) {
             this.orchardServices = orchardServices;
             this.authenticationService = authenticationService;
             this.contentManager = contentManager;
-            this.menuService = menuService;
             this.navigationManager = navigationManager;
             this.autorouteService = autorouteService;
-            this.widgetsService = widgetsService;
             this.siteService = siteService;
             this.membershipService = membershipService;
             T = NullLocalizer.Instance;
@@ -121,32 +111,6 @@ namespace Codesanook.EventManagement {
                     .WithPart(nameof(UpcomingEventsPart))
                     .AsWidgetWithIdentity() // in Orchard.Widget assembly
             );
-            const string homePageLayerName = "TheHomepage";
-            var homePageLayer = widgetsService.GetLayers().FirstOrDefault(x => x.Name == homePageLayerName);
-            if (homePageLayer == null) {
-                orchardServices.Notifier.Warning(
-                    T($"{widgetTypeName} could not be created because no '{homePageLayerName}' layer. Please create it manually.")
-                );
-                return 1;
-            }
-
-            var widgetPart = widgetsService.CreateWidget(
-                homePageLayer.Id,
-                widgetTypeName,
-                "Upcomming Events",
-                "1.0",
-                "Content"
-            );
-            widgetPart.RenderTitle = false;
-            var commonPart = widgetPart.As<CommonPart>();
-            var superUser = siteService.GetSiteSettings().SuperUser;
-            var owner = membershipService.GetUser(superUser);
-            commonPart.Owner = owner;
-
-
-            // Publish the widget
-            contentManager.Publish(widgetPart.ContentItem);
-            CreateHomePageContentItem();
 
             return 1;
         }
@@ -168,16 +132,6 @@ namespace Codesanook.EventManagement {
             autoRoutePart.CustomPattern = "{Content.Slug}";
             autoRoutePart.DisplayAlias = autorouteService.Value.GenerateAlias(autoRoutePart);
             autorouteService.Value.PublishAlias(autoRoutePart);
-
-            // Attach to main menu
-            const string mainMenu = "Main Menu";
-            var menu = menuService.GetMenu(mainMenu);
-
-            // Create frontend menu
-            var menuPart = projectionPage.As<MenuPart>();
-            menuPart.MenuPosition = navigationManager.GetNextPosition(menu);
-            menuPart.MenuText = "Events";
-            menuPart.Menu = menu;
 
             // Create admin menu
             var adminMenuPart = projectionPage.As<AdminMenuPart>();
@@ -228,30 +182,6 @@ namespace Codesanook.EventManagement {
             }
 
             return Position.GetNext(adminMenu);
-        }
-
-        private void CreateHomePageContentItem() {
-            ContentDefinitionManager.AlterTypeDefinition(
-                "HomePage",
-                cfg => cfg
-                    .WithPart(nameof(CommonPart))
-                    .WithPart(
-                        nameof(AutoroutePart),
-                        builder => builder
-                            .WithSetting("AutorouteSettings.AllowCustomPattern", "False")
-                    )
-                    .Listable()
-                );
-
-            // create static content item
-            var contentItem = this.contentManager.Create("HomePage");
-            var autoroutePart = contentItem.As<AutoroutePart>();
-            autoroutePart.UseCustomPattern = true;
-            autoroutePart.CustomPattern = "/";
-            autoroutePart.DisplayAlias = autorouteService.Value.GenerateAlias(autoroutePart);
-            autoroutePart.PromoteToHomePage = true;
-
-            autorouteService.Value.PublishAlias(autoroutePart);
         }
     }
 }
