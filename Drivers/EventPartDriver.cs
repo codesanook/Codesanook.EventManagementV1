@@ -30,10 +30,17 @@ namespace Codesanook.EventManagement.Drivers {
             // property as arguments of Parts_Event () method
             var commonPart = part.As<CommonPart>();
             //commonPart.Container
-            return ContentShape(
-                "Parts_Event",
-                () => shapeHelper.Parts_Event(
-                    BeginDateTimeUtc: part.BeginDateTimeUtc
+
+            return Combined(
+                ContentShape("Parts_Event_Meta",
+                    () => shapeHelper.Parts_Event_Meta(
+                        BeginDateTimeUtc: part.BeginDateTimeUtc,
+                        EndDateTimeUtc: part.EndDateTimeUtc
+                    )
+                ),
+                ContentShape(
+                    "Parts_Event",
+                    () => shapeHelper.Parts_Event(Event: part)
                 )
             );
         }

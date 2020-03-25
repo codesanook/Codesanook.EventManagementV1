@@ -1,10 +1,23 @@
 ﻿@{
     IEnumerable<object> events = Model.ContentItems;
-    //Model.ContentItems.Classes.Add("content-items");
+
+    // Model.ContentItems is List shape defined in List shape in CoreShape.cs.
+    // We use Model.ContentItems.Classes to add class to ul tag
+    Model.ContentItems.Classes.Add("list");
+    Model.ContentItems.Classes.Add("list-unstyled");
+
+    //Model.ContentItems.ItemClasses is for adding classes to li tag and defined in List shape in CoreShape.cs.
+    Model.ContentItems.ItemClasses = new List<string>() { "mb-4" };
 }
 
-@Display(Model.ContentItems)
+<div class="upcoming-events bg-light-grey mt-5">
+    <div class="container pt-4 pb-4">
+        <h2 class="title">Upcoming Events</h2>
+        @Display(Model.ContentItems)
 
-@if (events == null || events.Count() < 1) {
-<p>@T("No new upcoming events")</p>
-}
+        @if (events == null || events.Count() < 1)
+        {
+            <p>@T("No new upcoming events")</p>
+        }
+    </div>
+</div>

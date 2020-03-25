@@ -1,0 +1,22 @@
+﻿@using Orchard.Mvc.Extensions
+@{
+    var beginDateTimeUtc = Model.BeginDateTimeUtc as DateTime?;
+    var endDateTimeUtc = Model.EndDateTimeUtc as DateTime?;
+}
+
+@*begin*@
+<div class="date-box">
+    <div class="month">@beginDateTimeUtc.Value.ToString("MMM")</div>
+    <div class="date">@beginDateTimeUtc.Value.Day</div>
+    <div class="year">@beginDateTimeUtc.Value.Year</div>
+</div>
+
+@*end*@
+@*@if (endDateTimeUtc.HasValue)
+{
+    <div class="date-box">
+        <div class="month">@endDateTimeUtc.Value.ToString("MMM")</div>
+        <div class="date">@endDateTimeUtc.Value.Day</div>
+        <div class="year">@endDateTimeUtc.Value.Year</div>
+    </div>
+}*@

@@ -1,6 +1,11 @@
 ﻿@using Orchard.Mvc.Extensions
+@using Codesanook.EventManagement.Models
+@{
 
-Event display
-@*
-    TODO add fields here
-*@  
+    var eventPart = Model.Event as EventPart;
+}
+
+<div>
+    details:
+    @Html.Raw(eventPart.Details)
+</div>
