@@ -1,23 +1,30 @@
 ﻿@{
-    IEnumerable<object> events = Model.ContentItems;
+    var events = Model.UpcomingEvents as IEnumerable<object>;
+    bool showViewMore = Model.ShowViewMore;
+                    
+    // Model.UpcomingEvents is List shape defined in List shape in CoreShape.cs.
+    // We use Model.UpcomingEvents.Classes to add class to ul tag
+    Model.UpcomingEvents.Classes.Add("list");
+    Model.UpcomingEvents.Classes.Add("list-unstyled");
 
-    // Model.ContentItems is List shape defined in List shape in CoreShape.cs.
-    // We use Model.ContentItems.Classes to add class to ul tag
-    Model.ContentItems.Classes.Add("list");
-    Model.ContentItems.Classes.Add("list-unstyled");
-
-    //Model.ContentItems.ItemClasses is for adding classes to li tag and defined in List shape in CoreShape.cs.
-    Model.ContentItems.ItemClasses = new List<string>() { "mb-4" };
+    //Model.UpcomingEvents.ItemClasses is for adding classes to li tag and defined in List shape in CoreShape.cs.
+    Model.UpcomingEvents.ItemClasses = new List<string>() { "mb-4" };
 }
 
 <div class="upcoming-events bg-light-grey mt-5">
     <div class="container pt-4 pb-4">
         <h2 class="title">Upcoming Events</h2>
-        @Display(Model.ContentItems)
-
-        @if (events == null || events.Count() < 1)
+        @Display(Model.UpcomingEvents)
+        @if (!(events?.Any() ?? false))
         {
             <p>@T("No new upcoming events")</p>
+        }
+
+        @if(showViewMore)
+        {
+            <div class="view-more">
+                <a href="announcements.html" class="button">View more</a>
+            </div>
         }
     </div>
 </div>

@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Linq;
 using Codesanook.EventManagement.Models;
+using Codesanook.EventManagement.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
 namespace Codesanook.EventManagement.Drivers {
     public class UpcomingEventsPartDriver : ContentPartDriver<UpcomingEventsPart> {
         private readonly IContentManager contentManager;
+        private readonly IEventService eventService;
 
-        public UpcomingEventsPartDriver(IContentManager contentManager) {
+        public UpcomingEventsPartDriver(
+            IContentManager contentManager,
+            IEventService eventService
+        ) {
             this.contentManager = contentManager;
+            this.eventService = eventService;
         }
 
         protected override DriverResult Display(UpcomingEventsPart part, string displayType, dynamic shapeHelper) {
 
-            var events = contentManager.Query(VersionOptions.Published, "Event") // Event type
-                .Join<EventPartRecord>()
-                .Where(e => e.BeginDateTimeUtc > DateTime.UtcNow) // Future event
-                .OrderByDescending(e => e.BeginDateTimeUtc)
-                .Slice(0, part.Count)
-                .Select(e => e.As<EventPart>());
-
+            var upcommingEvents = eventService.GetUpcommingEvents(0, part.Count);
             var eventListShape = shapeHelper.List();
-            eventListShape.AddRange(events.Select(e => contentManager.BuildDisplay(e, "Summary")));
+            eventListShape.AddRange(
+                // Transform each event part to summary shape
+                upcommingEvents.Select(e => contentManager.BuildDisplay(e, "Summary"))
+            );
 
+            var  totalUpcommingEventsCount = eventService.GetUpcommingEventsCount();
             return ContentShape(
                 "Parts_UpcomingEvents",
-                () => shapeHelper.Parts_UpcomingEvents(ContentItems: eventListShape)
+                () => shapeHelper.Parts_UpcomingEvents(
+                    UpcomingEvents: eventListShape,
+                    ShowViewMore: totalUpcommingEventsCount > part.Count
+                )
             );
         }
     }

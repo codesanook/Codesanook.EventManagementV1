@@ -87,13 +87,13 @@ namespace Codesanook.EventManagement.Controllers {
 
         public ActionResult Index(PagerParameters pagerParameters) {
             var pager = new Pager(siteService.GetSiteSettings(), pagerParameters);
-            var events = eventService.Get(pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
+            var events = eventService.GetEvents(pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
             var eventShapes = events.Select(e => contentManager.BuildDisplay(e, "SummaryAdmin")).ToArray();
 
             var listShape = Shape.List();
             listShape.AddRange(eventShapes);
 
-            var totalItemCount = eventService.GetEventCount(VersionOptions.Latest);
+            var totalItemCount = eventService.GetEventsCount(VersionOptions.Latest);
             var pagerShape = Shape.Pager(pager).TotalItemCount(totalItemCount);
 
             var viewModel = Shape.ViewModel()
