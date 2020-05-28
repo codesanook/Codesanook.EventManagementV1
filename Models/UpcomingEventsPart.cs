@@ -3,7 +3,6 @@ using Orchard.ContentManagement;
 
 namespace Codesanook.EventManagement.Models {
     public class UpcomingEventsPart : ContentPart {
-
         [Required]
         public int Count {
             // Use infoset only

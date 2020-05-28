@@ -149,8 +149,10 @@ namespace Codesanook.EventManagement {
                 Description = queryName,
                 Position = 1,
                 State =
-                    $"<Form><Description>{queryName}</Description>" +
-                    $"<ContentTypes>{queryName}</ContentTypes></Form>"
+                    $"<Form>" +
+                    $"<ContentTypes>{queryName}</ContentTypes>" +
+                    $"<Description>{queryName}</Description>" +
+                    $"</Form>"
             };
 
             var filterGroupRecord = new FilterGroupRecord();

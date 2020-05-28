@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.Services;
 using Orchard.ContentManagement;
@@ -19,7 +18,6 @@ namespace Codesanook.EventManagement.Drivers {
         }
 
         protected override DriverResult Display(UpcomingEventsPart part, string displayType, dynamic shapeHelper) {
-
             var upcommingEvents = eventService.GetUpcommingEvents(0, part.Count);
             var eventListShape = shapeHelper.List();
             eventListShape.AddRange(
