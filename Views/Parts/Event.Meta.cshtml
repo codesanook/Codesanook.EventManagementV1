@@ -3,20 +3,29 @@
     var beginDateTimeUtc = Model.BeginDateTimeUtc as DateTime?;
     var endDateTimeUtc = Model.EndDateTimeUtc as DateTime?;
 }
-
-@*begin*@
 <div class="date-box">
-    <div class="month">@beginDateTimeUtc.Value.ToString("MMM")</div>
-    <div class="date">@beginDateTimeUtc.Value.Day</div>
-    <div class="year">@beginDateTimeUtc.Value.Year</div>
+    <p>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        @if (beginDateTimeUtc.Value.ToString("dd MMM yyyy") .Equals(endDateTimeUtc.Value.ToString("dd MMM yyyy")))
+        {
+            <span>@beginDateTimeUtc.Value.ToString("dd MMM yyyy")</span>
+        }
+        else
+        {
+            <span>@beginDateTimeUtc.Value.Day</span>
+            <span>-</span>
+            <span>@endDateTimeUtc.Value.ToString("dd MMM yyyy")</span>
+        }
+    </p>
+    <p>
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <span>@beginDateTimeUtc.Value.ToString("HH:mm")</span>
+        <span>-</span>
+        <span>@endDateTimeUtc.Value.ToString("HH:mm")</span>
+        <span>(GMT+7)</span>
+    </p>
+    <p>
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        <span>IMPACT Exhibition and Con...</span>
+    </p>
 </div>
-
-@*end*@
-@*@if (endDateTimeUtc.HasValue)
-{
-    <div class="date-box">
-        <div class="month">@endDateTimeUtc.Value.ToString("MMM")</div>
-        <div class="date">@endDateTimeUtc.Value.Day</div>
-        <div class="year">@endDateTimeUtc.Value.Year</div>
-    </div>
-}*@
