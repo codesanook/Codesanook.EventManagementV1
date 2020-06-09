@@ -1,10 +1,6 @@
-﻿@using Orchard.Mvc.Extensions
-@using Codesanook.EventManagement.Models
-@{
-
-    var eventPart = Model.Event as EventPart;
-}
+﻿@using Codesanook.EventManagement.ViewModels
+@model EventDisplayViewModel
 
 <div>
-    @Html.Raw(eventPart.Location)
+    Location: @Html.Raw(Model.Location)
 </div>

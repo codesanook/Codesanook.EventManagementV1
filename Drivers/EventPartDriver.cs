@@ -12,12 +12,18 @@ using Orchard.UI.Notify;
 // For cref
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Logging;
+using System.Collections.Generic;
+using Orchard.Services;
+using System.Linq;
+using Orchard.Core.Common.Settings;
+using System.Web;
 
 namespace Codesanook.EventManagement.Drivers {
     //To have a part show in content type item, we need to have content part driver 
     public class EventPartDriver : ContentPartDriver<EventPart> {
         private readonly IOrchardServices orchardServices;
         private readonly IDateLocalizationServices dateLocalizationServices;
+        private readonly IEnumerable<IHtmlFilter> htmlFilters;
         protected override string Prefix => nameof(EventPart);
 
         public ILogger Logger { get; set; }
@@ -25,10 +31,12 @@ namespace Codesanook.EventManagement.Drivers {
 
         public EventPartDriver(
             IOrchardServices orchardServices,
-            IDateLocalizationServices dateLocalizationServices
+            IDateLocalizationServices dateLocalizationServices,
+            IEnumerable<IHtmlFilter> htmlFilters
         ) {
             this.orchardServices = orchardServices;
             this.dateLocalizationServices = dateLocalizationServices;
+            this.htmlFilters = htmlFilters;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -43,17 +51,55 @@ namespace Codesanook.EventManagement.Drivers {
             // property as arguments of Parts_Event () method
             var commonPart = part.As<CommonPart>();
             return Combined(
-                ContentShape("Parts_Event_Meta",
-                    () => shapeHelper.Parts_Event_Meta(
-                        BeginDateTimeUtc: part.BeginDateTimeUtc,
-                        EndDateTimeUtc: part.EndDateTimeUtc
-                    )
+                ContentShape(
+                    "Parts_Event_Meta",
+                    () => {
+                        // EventDisplayViewModel must inherit from Shape
+                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event_Meta(typeof(EventDisplayViewModel));
+                        // This can be used object mapper.
+                        SetValuesViewModel(part, viewModel);
+                        return viewModel;
+                    }
+                ),
+                ContentShape(
+                    "Parts_Event_Body_Summary",
+                    () => {
+                        var favor = GetFlavor(part.As<BodyPart>());
+                        var bodyText = htmlFilters.Aggregate(
+                            part.Details,
+                            (text, filter) => filter.ProcessContent(text, favor)
+                        );
+
+                        // EventDisplayViewModel must inherit from Shape
+                        return shapeHelper.Parts_Event_Body_Summary(Html: new HtmlString(bodyText));
+                    }
                 ),
                 ContentShape(
                     "Parts_Event",
-                    () => shapeHelper.Parts_Event(Event: part)
+                    () => {
+                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event(typeof(EventDisplayViewModel));
+                        SetValuesViewModel(part, viewModel);
+                        return viewModel;
+                    }
                 )
             );
+        }
+
+        private static string GetFlavor(BodyPart part) {
+            var typePartSettings = part.Settings.GetModel<BodyTypePartSettings>();
+            return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
+                ? typePartSettings.Flavor
+                : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
+        }
+
+        private static void SetValuesViewModel(EventPart part, EventDisplayViewModel viewModel) {
+            // We always get datetime value, we use null because of Orchard CMS
+            viewModel.BeginDateTimeUtc = part.BeginDateTimeUtc.Value;
+            viewModel.EndDateTimeUtc = part.EndDateTimeUtc.Value;
+
+            viewModel.Location = part.Location;
+            viewModel.MaxAttendees = part.MaxAttendees;
+            viewModel.TicketPrice = part.TicketPrice;
         }
 
         // HTTP GET
