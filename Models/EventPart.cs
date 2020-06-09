@@ -37,17 +37,17 @@ namespace Codesanook.EventManagement.Models {
 
         public DateTime? PublishedUtc => this.As<ICommonPart>().PublishedUtc;
 
-        public virtual DateTime? BeginDateTimeUtc {
+        public DateTime? BeginDateTimeUtc {
             get => Record.BeginDateTimeUtc;
             set => Record.BeginDateTimeUtc = value;
         }
 
-        public virtual DateTime? EndDateTimeUtc {
+        public DateTime? EndDateTimeUtc {
             get => Record.EndDateTimeUtc;
             set => Record.EndDateTimeUtc = value;
         }
 
-        public virtual string Location {
+        public string Location {
             get => Record.Location;
             set => Record.Location = value;
         }
@@ -55,6 +55,11 @@ namespace Codesanook.EventManagement.Models {
         public virtual int MaxAttendees {
             get => Record.MaxAttendees;
             set => Record.MaxAttendees = value;
+        }
+
+        public decimal TicketPrice {
+            get => Record.TicketPrice;
+            set => Record.TicketPrice = value;
         }
     }
 }

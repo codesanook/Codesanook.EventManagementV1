@@ -61,6 +61,7 @@ namespace Codesanook.EventManagement {
                     .Column<DateTime>(nameof(EventPartRecord.BeginDateTimeUtc))
                     .Column<DateTime>(nameof(EventPartRecord.EndDateTimeUtc))
                     .Column<int>(nameof(EventPartRecord.MaxAttendees))
+                    .Column<decimal>(nameof(EventPartRecord.TicketPrice))
             );
 
             // Prepare content part
@@ -91,7 +92,8 @@ namespace Codesanook.EventManagement {
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
                         .WithSetting("AutorouteSettings.PatternDefinitions",
                             "[{'Name': 'Event details by id', 'Pattern': 'events/{Content.Id}', 'Description': 'events/event-id'}]"
-                        ))
+                        )
+                    )
                     .Draftable()
             );
 

@@ -1,28 +1,47 @@
-﻿@using Orchard.Mvc.Extensions
-@using Codesanook.EventManagement.ViewModels;
+﻿@using Codesanook.EventManagement.ViewModels;
 @model EventViewModel
+@{
+    Style.Require("Bootstrap");
+}
 
 <fieldset>
-    <label for="@Html.FieldIdFor(m => Model.BeginDateTimeEditor.Date)">@T("Begin datetime")</label>
-    @Html.EditorFor(m => m.BeginDateTimeEditor)
-    <span class="hint">@T("Provide a custom public url which will be used to proxy the local rss feed.")</span>
-    @Html.ValidationMessageFor(m => m.BeginDateTimeEditor)
-</fieldset>
+    <legend>Date and time</legend>
+    <div class="clearfix">
+        <div class="float-left">
+            <label for="@Html.FieldIdFor(m => Model.BeginDateEditor.Date)">@T("Begin date")</label>
+            @Html.EditorFor(m => m.BeginDateEditor)
+            <span class="hint">@T("Enter begin date of an event")</span>
+        </div>
+        <div class="float-left ml-4">
+            <label for="@Html.FieldIdFor(m => Model.EndDateEditor.Date)">@T("End date")</label>
+            @Html.EditorFor(m => m.EndDateEditor)
+            <span class="hint">@T("Enter end date of an event")</span>
+        </div>
+    </div>
 
-<fieldset>
-    <label for="@Html.FieldIdFor(m => Model.EndDateTimeEditor.Date)">@T("End datetime")</label>
-    @Html.EditorFor(m => m.EndDateTimeEditor)
-    @Html.ValidationMessageFor(m => m.EndDateTimeEditor)
+    <div class="clearfix">
+        <div class="float-left">
+            <label for="@Html.FieldIdFor(m => Model.BeginTimeEditor.Time)">@T("Begin time")</label>
+            @Html.EditorFor(m => m.BeginTimeEditor)
+            <span class="hint">@T("Enter begin time of an event")</span>
+        </div>
+
+        <div class="float-left ml-4">
+            <label for="@Html.FieldIdFor(m => Model.EndTimeEditor.Time)">@T("End time")</label>
+            @Html.EditorFor(m => m.EndTimeEditor)
+            <span class="hint">@T("Enter end time of an event")</span>
+        </div>
+    </div>
 </fieldset>
 
 <fieldset>
     <label for="@Html.FieldIdFor(m => Model.Location)">@T("Location")</label>
     @Html.TextAreaFor(m => m.Location)
     @Html.ValidationMessageFor(m => m.Location)
-</fieldset>
-
-<fieldset>
     <label for="@Html.FieldIdFor(m => Model.MaxAttendees)">@T("Max attendees")</label>
     @Html.TextBoxFor(m => m.MaxAttendees)
     @Html.ValidationMessageFor(m => m.MaxAttendees)
+    <label for="@Html.FieldIdFor(m => Model.TicketPrice)">@T("Ticket price")</label>
+    @Html.TextBoxFor(m => m.TicketPrice)
+    @Html.ValidationMessageFor(m => m.TicketPrice)
 </fieldset>

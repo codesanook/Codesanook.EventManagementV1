@@ -7,6 +7,7 @@ namespace Codesanook.EventManagement.Models {
         public virtual DateTime? BeginDateTimeUtc { get; set; }
         public virtual DateTime? EndDateTimeUtc { get; set; }
         public virtual int MaxAttendees { get; set; }
+        public virtual decimal TicketPrice { get; set; }
 
         //TODO for query only?
         //public virtual int ContentItemId { get; set; }
