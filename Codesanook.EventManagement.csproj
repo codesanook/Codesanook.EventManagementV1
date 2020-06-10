@@ -111,9 +111,7 @@
     <Compile Include="Models\EventPart.cs" />
     <Compile Include="Models\EventPartRecord.cs" />
     <Compile Include="Models\UpcomingEventsPart.cs" />
-    <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routes.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="ViewModels\EventDisplayViewModel.cs" />
@@ -158,12 +156,6 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EventAdmin\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EventAdmin\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +179,7 @@
   <ItemGroup>
     <Content Include="Views\Parts\Event.Body.Summary.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

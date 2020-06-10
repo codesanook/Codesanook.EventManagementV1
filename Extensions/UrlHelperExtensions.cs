@@ -1,5 +1,4 @@
 using System.Web.Mvc;
-using Codesanook.EventManagement.Models;
 
 namespace Codesanook.EventManagement.Extensions {
 
