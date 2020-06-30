@@ -5,6 +5,7 @@
         <Place Parts_Event_Body_Summary="Header:6"/>
     </Match>
     <Place Parts_Event_Meta="Meta:1"/>
+    <Place Parts_Event_Footer="Footer:1"/>
     <Place Parts_Event="Content:1"/>
     <Place Parts_Event_Edit="Content:1"/>
     <Place Parts_UpcomingEvents="Content:1"/>

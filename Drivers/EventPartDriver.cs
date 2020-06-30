@@ -57,7 +57,7 @@ namespace Codesanook.EventManagement.Drivers {
                         // EventDisplayViewModel must inherit from Shape
                         EventDisplayViewModel viewModel = shapeHelper.Parts_Event_Meta(typeof(EventDisplayViewModel));
                         // This can be used object mapper.
-                        SetValuesViewModel(part, viewModel);
+                        SetPartValuesToViewModel(part, viewModel);
                         return viewModel;
                     }
                 ),
@@ -78,7 +78,15 @@ namespace Codesanook.EventManagement.Drivers {
                     "Parts_Event",
                     () => {
                         EventDisplayViewModel viewModel = shapeHelper.Parts_Event(typeof(EventDisplayViewModel));
-                        SetValuesViewModel(part, viewModel);
+                        SetPartValuesToViewModel(part, viewModel);
+                        return viewModel;
+                    }
+                ),
+                ContentShape(
+                    "Parts_Event_Footer",
+                    () => {
+                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event_Footer(typeof(EventDisplayViewModel));
+                        SetPartValuesToViewModel(part, viewModel);
                         return viewModel;
                     }
                 )
@@ -92,8 +100,9 @@ namespace Codesanook.EventManagement.Drivers {
                 : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
         }
 
-        private static void SetValuesViewModel(EventPart part, EventDisplayViewModel viewModel) {
+        private static void SetPartValuesToViewModel(EventPart part, EventDisplayViewModel viewModel) {
             // We always get datetime value, we use null because of Orchard CMS
+            viewModel.EventId = part.Id;
             viewModel.BeginDateTimeUtc = part.BeginDateTimeUtc.Value;
             viewModel.EndDateTimeUtc = part.EndDateTimeUtc.Value;
 

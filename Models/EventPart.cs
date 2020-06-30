@@ -38,13 +38,13 @@ namespace Codesanook.EventManagement.Models {
         public DateTime? PublishedUtc => this.As<ICommonPart>().PublishedUtc;
 
         public DateTime? BeginDateTimeUtc {
-            get => Record.BeginDateTimeUtc;
-            set => Record.BeginDateTimeUtc = value;
+            get => Record.StartDateTimeUtc;
+            set => Record.StartDateTimeUtc = value;
         }
 
         public DateTime? EndDateTimeUtc {
-            get => Record.EndDateTimeUtc;
-            set => Record.EndDateTimeUtc = value;
+            get => Record.FinishDateTimeUtc;
+            set => Record.FinishDateTimeUtc = value;
         }
 
         public string Location {
