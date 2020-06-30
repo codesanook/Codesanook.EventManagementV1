@@ -11,6 +11,7 @@
         Incomplete, // => A user hasn't finished booking. 
         Unpaid, // => Waiting for the payment  
         Paid, //=> A user's already paid a successful booking  
+        Verifying,
         Cancelled, // A user does not finish booking and cancels
         Refunded // = A user cancels and get money back
     }

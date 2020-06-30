@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Codesanook.EventManagement.Models;
+using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Themes;
 
@@ -11,9 +13,14 @@ namespace Codesanook.EventManagement.Controllers {
     [Themed]
     public class EventBookingController : Controller {
         private readonly ITransactionManager transactionManager;
+        private readonly IContentManager contentManager;
 
-        public EventBookingController(ITransactionManager transactionManager) {
+        public EventBookingController(
+            ITransactionManager transactionManager,
+            IContentManager contentManager
+        ) {
             this.transactionManager = transactionManager;
+            this.contentManager = contentManager;
         }
 
         // /event-booking 
@@ -41,34 +48,50 @@ namespace Codesanook.EventManagement.Controllers {
                 .Select(_ => new EventAttendeeRecord())
                 .ToList();
 
-            return View(eventAttendees);
+            var eventPart = contentManager.Get<EventPart>(id);
+            var viewModel = new EventBookingRegisterViewModel() {
+                Event = eventPart,
+                EventAttendees = eventAttendees
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Register(IList<EventAttendeeRecord> eventAttendees) {
-            return View(eventAttendees);
+        public ActionResult Register(int id, IList<EventAttendeeRecord> eventAttendees) {
+            // Form validation
+            // Save with NHibernate session
+            var session = transactionManager.GetSession();
+            //session.Save()
+            return RedirectToAction(nameof(RegisterConfirm), new { id = id });
         }
 
-        [ActionName("register-review")]
-        //[HttpPost]
-        public ActionResult RegisterReview(int id) {
+        public ActionResult RegisterConfirm(int id) {
             // Sometimes you need to delete mapping cache
             var session = transactionManager.GetSession();
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
                 .SingleOrDefault(b => b.Id == id);
-            return View(nameof(RegisterReview), eventBookings);
+            return View(eventBookings);
         }
 
-        [ActionName("register-result")]
-        //[HttpPost]
+        [HttpPost]
+        public ActionResult RegisterConfirm(int id, FormCollection form) {
+            // Sometimes you need to delete mapping cache
+            var session = transactionManager.GetSession();
+            // TODO get eager load children
+            var eventBookings = session.Query<EventBookingRecord>()
+                .SingleOrDefault(b => b.Id == id);
+            return RedirectToAction(nameof(RegisterResult), new { id = id });
+        }
+
+
         public ActionResult RegisterResult(int id) {
             // Sometimes you need to delete mapping cache
             var session = transactionManager.GetSession();
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
                 .SingleOrDefault(b => b.Id == id);
-            return View(nameof(RegisterResult), eventBookings);
+            return View(eventBookings);
         }
 
     }

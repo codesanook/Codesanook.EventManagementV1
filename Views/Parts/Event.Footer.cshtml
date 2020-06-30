@@ -7,7 +7,7 @@
     var actionUrl = Url.RouteUrl(
         "EventBooking",
         new {
-            action = nameof(EventBookingController.Register).ToLower(),
+            action = nameof(EventBookingController.Register),
             id = Model.EventId,
             numberOfAttendees = 3
         }
