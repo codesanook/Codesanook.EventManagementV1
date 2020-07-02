@@ -7,7 +7,9 @@ namespace Codesanook.EventManagement.ViewModels {
         public DateTime BeginDateTimeUtc { get; set; }
         public DateTime EndDateTimeUtc { get; set; }
         public string Location { get; set; }
-        public int MaxAttendees { get; set; }
+
+        // In a context of a ticket
         public decimal TicketPrice { get; set; }
+        public int AvailableTicketCount { get; set; }
     }
 }
