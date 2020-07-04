@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Web.Mvc;
 using Codesanook.EventManagement.Models;
+using Codesanook.EventManagement.Services;
 using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Security;
 using Orchard.Themes;
+using Orchard.Users.Models;
 
 namespace Codesanook.EventManagement.Controllers {
     [Themed]
     public class EventBookingController : Controller {
         private readonly ITransactionManager transactionManager;
         private readonly IContentManager contentManager;
+        private readonly IAuthenticationService authenticationService;
 
         public EventBookingController(
             ITransactionManager transactionManager,
-            IContentManager contentManager
+            IContentManager contentManager,
+            IAuthenticationService authenticationService
         ) {
             this.transactionManager = transactionManager;
             this.contentManager = contentManager;
+            this.authenticationService = authenticationService;
         }
 
         // /event-booking 
@@ -59,10 +66,30 @@ namespace Codesanook.EventManagement.Controllers {
         [HttpPost]
         public ActionResult Register(int id, IList<EventAttendeeRecord> eventAttendees) {
             // Form validation
-            // Save with NHibernate session
-            var session = transactionManager.GetSession();
-            //session.Save()
-            return RedirectToAction(nameof(RegisterConfirm), new { id = id });
+
+            var eventPart = contentManager.Get<EventPart>(id);
+
+            if (ModelState.IsValid) {
+                // Save with NHibernate session
+                var session = transactionManager.GetSession();
+                var user = authenticationService.GetAuthenticatedUser();
+
+                var eventBookingRecord = new EventBookingRecord() {
+                    Event = eventPart.Record,
+                    User = user.As<UserPart>().Record ,
+                    BookingDateTimeUtc = DateTime.Now,
+                    Status = EventBookingStatus.Unpaid,
+                    EventAttendees = eventAttendees
+                };
+                session.Save(eventBookingRecord);
+                return RedirectToAction(nameof(RegisterConfirm), new { id });
+            }
+
+            var viewModel = new EventBookingRegisterViewModel() {
+                Event = eventPart,
+                EventAttendees = eventAttendees
+            };
+            return View(viewModel);
         }
 
         public ActionResult RegisterConfirm(int id) {

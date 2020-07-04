@@ -5,20 +5,42 @@
 {
     <fieldset>
         <legend> Attendee @(index + 1) </legend>
-        <div>
-            @Html.TextBoxFor(m => m[index].FirstName)
+        <div class="row">
+            <div class="col-12 col-md-6">
+                @Html.TextBoxFor(m => m[index].FirstName, new
+               {
+                   placeholder = T(Html.DisplayNameFor(m => m[index].FirstName).ToString())
+               })
+                @Html.ValidationMessageFor(m => m[index].FirstName)
+            </div>
+            <div class="col-12 col-md-6">
+                @Html.TextBoxFor(m => m[index].LastName, new
+               {
+                   placeholder = T(Html.DisplayNameFor(m => m[index].LastName).ToString())
+               })
+                @Html.ValidationMessageFor(m => m[index].LastName)
+            </div>
         </div>
         <div>
-            @Html.TextBoxFor(m => m[index].LastName)
+            @Html.TextBoxFor(m => m[index].Email, new
+           {
+               @type = "email",
+               placeholder = T(Html.DisplayNameFor(m => m[index].Email).ToString())
+           })
         </div>
         <div>
-            @Html.TextBoxFor(m => m[index].Email)
+            @Html.TextBoxFor(m => m[index].MobilePhoneNumber, new
+           {
+               placeholder = T(Html.DisplayNameFor(m => m[index].MobilePhoneNumber).ToString())
+           })
+            @Html.ValidationMessageFor(m => m[index].MobilePhoneNumber)
         </div>
         <div>
-            @Html.TextBoxFor(m => m[index].MobilePhoneNumber)
-        </div>
-        <div>
-            @Html.TextBoxFor(m => m[index].OrganizationName)
+            @Html.TextBoxFor(m => m[index].OrganizationName, new
+           {
+               placeholder = T(Html.DisplayNameFor(m => m[index].OrganizationName).ToString())
+           })
+            @Html.ValidationMessageFor(m => m[index].OrganizationName)
         </div>
     </fieldset>
     <hr />

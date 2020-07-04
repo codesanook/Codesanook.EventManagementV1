@@ -6,8 +6,8 @@ namespace Codesanook.EventManagement.Mappings {
     public class EventBookingRecordMap : IAutoMappingOverride<EventBookingRecord> {
         public void Override(AutoMapping<EventBookingRecord> mapping) {
             // Many to one
-            mapping.References(x => x.User).Column("UserId");
-            mapping.References(x => x.Event).Column("EventId");
+            //mapping.References(x => x.User).Column("UserId");
+            //mapping.References(x => x.Event).Column("EventId");
 
             // One to many, and insert and delete a child if it has been deleted 
             mapping
