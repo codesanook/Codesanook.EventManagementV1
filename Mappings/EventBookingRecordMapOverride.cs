@@ -3,18 +3,23 @@ using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 
 namespace Codesanook.EventManagement.Mappings {
-    public class EventBookingRecordMap : IAutoMappingOverride<EventBookingRecord> {
+    public class EventBookingRecordMapOverride : IAutoMappingOverride<EventBookingRecord> {
         public void Override(AutoMapping<EventBookingRecord> mapping) {
+
             // Many to one
-            //mapping.References(x => x.User).Column("UserId");
-            //mapping.References(x => x.Event).Column("EventId");
+            mapping.References(x => x.User, "UserId");
+            mapping.References(x => x.Event, "EventId");
 
             // One to many, and insert and delete a child if it has been deleted 
             mapping
                 .HasMany(x => x.EventAttendees)
-                .Inverse() // Let EventAttend side insert with forign key, prevent unnecessary update
+                .Access.CamelCaseField() // This help export only property get access
+                // Let this side insert EventAttendee with forign key, prevent unnecessary update
+                .Not.Inverse() 
+                .Not.KeyNullable()
+                .Not.KeyUpdate()
                 .Cascade.All() // Also insert a child item when save insert this object
-                .KeyColumn("EventBookingId"); // EventAttendeeRecord table
+                .KeyColumn("EventBookingId"); // Foriegn key on EventAttendeeRecord table
 
             // To store the name or the value of your enum members. To store it by name, just map like this:
             // mapping.Map(x=>x.Status).CustomType<GenericEnumMapper<EventBookingStatus>>().Not.Nullable();

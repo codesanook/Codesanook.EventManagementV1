@@ -20,18 +20,18 @@ namespace Codesanook.EventManagement.Mappings {
 
         /// Called when an empty fluent configuration object has been created, 
         /// before applying any default Orchard config settings (alterations, conventions etc.).
-        ///Empty fluent NH configuration object.
-        ///Default persistence model that is about to be used.
-        //https://github.com/FluentNHibernate/fluent-nhibernate/wiki/Fluent-mapping
-        //https://github.com/FluentNHibernate/fluent-nhibernate/wiki/Auto-mapping
-        //https://tpodolak.com/blog/2013/03/25/fluent-nhibernate-automappings/
-        //http://www.ideliverable.com/blog/isessionconfigurationevents
+        /// Empty fluent NH configuration object.
+        /// Default persistence model that is about to be used.
+        // https://github.com/FluentNHibernate/fluent-nhibernate/wiki/Fluent-mapping
+        // https://github.com/FluentNHibernate/fluent-nhibernate/wiki/Auto-mapping
+        // https://tpodolak.com/blog/2013/03/25/fluent-nhibernate-automappings/
+        // http://www.ideliverable.com/blog/isessionconfigurationevents
         public void Created(FluentConfiguration cfg, AutoPersistenceModel defaultModel) {
-            //https://daveden.wordpress.com/2012/04/05/how-to-use-fluent-nhibernate-with-auto-mappings/
-            //https://stackoverflow.com/questions/42100286/nhibernate-fluent-add-external-assembly-mappings
-            //https://stackoverflow.com/questions/1858245/fluent-nhibernate-how-to-tell-it-not-to-map-a-base-class
+            // https://daveden.wordpress.com/2012/04/05/how-to-use-fluent-nhibernate-with-auto-mappings/
+            // https://stackoverflow.com/questions/42100286/nhibernate-fluent-add-external-assembly-mappings
+            // https://stackoverflow.com/questions/1858245/fluent-nhibernate-how-to-tell-it-not-to-map-a-base-class
 
-            defaultModel.UseOverridesFromAssemblyOf<EventBookingRecordMap>();
+            defaultModel.UseOverridesFromAssemblyOf<EventBookingRecordMapOverride>();
         }
 
         /// Called when fluent configuration has been prepared but not yet built. 

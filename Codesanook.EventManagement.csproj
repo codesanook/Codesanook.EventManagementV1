@@ -131,7 +131,7 @@
     <Compile Include="Drivers\UpcomingEventsPartDriver.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Handlers\EventPartHandler.cs" />
-    <Compile Include="Mappings\EventBookingRecordMap.cs" />
+    <Compile Include="Mappings\EventBookingRecordMapOverride.cs" />
     <Compile Include="Mappings\SessionConfigurationEvent.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\EventAttendeeRecord.cs" />

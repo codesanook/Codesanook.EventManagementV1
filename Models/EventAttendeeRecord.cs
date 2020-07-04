@@ -9,23 +9,23 @@ namespace Codesanook.EventManagement.Models {
 
         public virtual int Id { get; set; }
 
-        [DisplayName("First Name")]
+        [DisplayName("First name")]
         [Required]
-        public virtual string FirstName  { get; set; }
-        [DisplayName("Last Name")]
+        public virtual string FirstName { get; set; }
+
+        [DisplayName("Last name")]
         [Required]
         public virtual string LastName { get; set; }
 
         [Required]
         public virtual string Email { get; set; }
 
-        [DisplayName("Mobile Phone Number")]
+        [DisplayName("Mobile phone number")]
         [Required]
         public virtual string MobilePhoneNumber { get; set; }
 
-        [DisplayName("Organiza tionName")]
+        [DisplayName("Organization name")]
+        [Required]
         public virtual string OrganizationName { get; set; }
-
-        public virtual EventPartRecord Event { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.Services;
 using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
+using NHibernate.Util;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Security;
@@ -74,14 +75,18 @@ namespace Codesanook.EventManagement.Controllers {
                 var session = transactionManager.GetSession();
                 var user = authenticationService.GetAuthenticatedUser();
 
-                var eventBookingRecord = new EventBookingRecord() {
+                var eventBooking = new EventBookingRecord() {
                     Event = eventPart.Record,
-                    User = user.As<UserPart>().Record ,
+                    User = user.As<UserPart>().Record,
                     BookingDateTimeUtc = DateTime.Now,
                     Status = EventBookingStatus.Unpaid,
-                    EventAttendees = eventAttendees
                 };
-                session.Save(eventBookingRecord);
+                eventAttendees.ForEach(a => eventBooking.AddEventAttendee(a));
+
+                session.Save(eventBooking);
+                // Because we set cascase all so the flow will be:  
+                // Insert a new EventBookingRecord
+                // Insert a new EventAttendeeRecord
                 return RedirectToAction(nameof(RegisterConfirm), new { id });
             }
 
