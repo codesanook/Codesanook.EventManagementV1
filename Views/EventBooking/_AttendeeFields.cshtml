@@ -1,0 +1,25 @@
+﻿@using Codesanook.EventManagement.Models
+@model IList<EventAttendeeRecord>
+
+@for (int index = 0; index < Model.Count; index++)
+{
+    <fieldset>
+        <legend> Attendee @(index + 1) </legend>
+        <div>
+            @Html.TextBoxFor(m => m[index].FirstName)
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m[index].LastName)
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m[index].Email)
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m[index].MobilePhoneNumber)
+        </div>
+        <div>
+            @Html.TextBoxFor(m => m[index].OrganizationName)
+        </div>
+    </fieldset>
+    <hr />
+}

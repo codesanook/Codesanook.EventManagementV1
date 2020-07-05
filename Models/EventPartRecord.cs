@@ -4,8 +4,8 @@ using Orchard.ContentManagement.Records;
 namespace Codesanook.EventManagement.Models {
     public class EventPartRecord : ContentPartRecord {
         public virtual string Location { get; set; }
-        public virtual DateTime? BeginDateTimeUtc { get; set; }
-        public virtual DateTime? EndDateTimeUtc { get; set; }
+        public virtual DateTime? StartDateTimeUtc { get; set; }
+        public virtual DateTime? FinishDateTimeUtc { get; set; }
         public virtual int MaxAttendees { get; set; }
         public virtual decimal TicketPrice { get; set; }
 

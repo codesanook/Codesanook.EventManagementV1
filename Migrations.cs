@@ -58,8 +58,8 @@ namespace Codesanook.EventManagement {
                 table => table
                     .ContentPartRecord()
                     .Column<string>(nameof(EventPartRecord.Location), c => c.WithLength(1024))
-                    .Column<DateTime>(nameof(EventPartRecord.BeginDateTimeUtc))
-                    .Column<DateTime>(nameof(EventPartRecord.EndDateTimeUtc))
+                    .Column<DateTime>(nameof(EventPartRecord.StartDateTimeUtc))
+                    .Column<DateTime>(nameof(EventPartRecord.FinishDateTimeUtc))
                     .Column<int>(nameof(EventPartRecord.MaxAttendees))
                     .Column<decimal>(nameof(EventPartRecord.TicketPrice))
             );
@@ -114,7 +114,40 @@ namespace Codesanook.EventManagement {
                     .AsWidgetWithIdentity() // in Orchard.Widget assembly
             );
 
+
+            CreateEventBookingRecordTable();
+            CreateEventAttendeeRecordTable();
             return 1;
+        }
+
+        private void CreateEventBookingRecordTable() {
+            SchemaBuilder.CreateTable(
+                nameof(EventBookingRecord),
+                table => table
+                    .Column<int>(nameof(EventBookingRecord.Id), column => column.PrimaryKey().Identity())
+                    .Column<int>("EventId", column=> column.NotNull())
+                    .Column<int>("UserId", column=> column.NotNull())
+                    .Column<int>(nameof(EventBookingRecord.Status), column=> column.NotNull())
+
+                    .Column<DateTime>(nameof(EventBookingRecord.BookingDateTimeUtc))
+                    .Column<DateTime>(nameof(EventBookingRecord.PaidDateTimeUtc))
+                    .Column<decimal>(nameof(EventBookingRecord.PaymentConfirmationAttachementFileUrl))
+            );
+        }
+
+        private void CreateEventAttendeeRecordTable() {
+            SchemaBuilder.CreateTable(
+                nameof(EventAttendeeRecord),
+                table => table
+                    .Column<int>(nameof(EventAttendeeRecord.Id), column => column.PrimaryKey().Identity())
+                    .Column<string>(nameof(EventAttendeeRecord.FirstName), column => column.NotNull())
+                    .Column<string>(nameof(EventAttendeeRecord.LastName), column => column.NotNull())
+
+                    .Column<string>(nameof(EventAttendeeRecord.Email), column => column.NotNull())
+                    .Column<string>(nameof(EventAttendeeRecord.MobilePhoneNumber), column => column.NotNull())
+                    .Column<string>(nameof(EventAttendeeRecord.OrganizationName), column => column.NotNull())
+                    .Column<int>("EventBookingId", column => column.NotNull())
+            );
         }
 
         private void CreateProjectionItemForEventPart() {

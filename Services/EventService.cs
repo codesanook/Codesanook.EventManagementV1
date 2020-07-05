@@ -30,8 +30,8 @@ namespace Codesanook.EventManagement.Blogs.Services {
         public IReadOnlyCollection<EventPart> GetUpcommingEvents(int skip, int count) {
             var events = contentManager.Query(VersionOptions.Published, "Event") // Event type
                 .Join<EventPartRecord>()
-                .Where(e => e.BeginDateTimeUtc > DateTime.UtcNow) // Future event
-                .OrderByDescending(e => e.BeginDateTimeUtc)
+                .Where(e => e.StartDateTimeUtc > DateTime.UtcNow) // Future event
+                .OrderByDescending(e => e.StartDateTimeUtc)
                 .Slice(skip, count)
                 .ToList() // Execute SQL
                 .Select(e => e.As<EventPart>())
@@ -51,7 +51,7 @@ namespace Codesanook.EventManagement.Blogs.Services {
             /// Gets the latest published version.
             var count = contentManager.Query(VersionOptions.Published, "Event") // Event type
                 .Join<EventPartRecord>()
-                .Where(e => e.BeginDateTimeUtc > DateTime.UtcNow) // Future event
+                .Where(e => e.StartDateTimeUtc > DateTime.UtcNow) // Future event
                 .Count();
             return count;
         }

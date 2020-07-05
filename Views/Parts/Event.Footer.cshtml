@@ -1,0 +1,34 @@
+﻿@using Codesanook.EventManagement.ViewModels
+@using Codesanook.EventManagement.Controllers
+@model EventDisplayViewModel
+@{
+    Script.Require("React").AtHead();
+    Script.Require("ReactDOM").AtHead();
+    Script.Include("codesanook-event-management.js").AtHead();
+    Style.Include("codesanook-event-management.css").AtHead();
+
+    // FYI Model.Id is Shape id and is not the same as our business event item ID
+    var actionUrl = Url.RouteUrl(
+        "EventBooking",
+        new
+        {
+            action = nameof(EventBookingController.Register),
+            id = Model.EventId,
+        }
+    );
+}
+
+@*
+    We register it with "global.CodesanookEventManagement = Components;"
+    so that we can access it as Component.ComponentName
+*@
+@Html.React(
+    "CodesanookEventManagement.BuyTicket", new
+    {
+        ticketPrice = Model.TicketPrice,
+        availableTicketCount = Model.AvailableTicketCount,
+        actionUrl = actionUrl
+    }
+)
+
+<hr />
