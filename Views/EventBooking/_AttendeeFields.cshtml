@@ -29,10 +29,10 @@
            })
         </div>
         <div>
-            @Html.TextBoxFor(m => m[index].MobilePhoneNumber, new
-           {
-               placeholder = T(Html.DisplayNameFor(m => m[index].MobilePhoneNumber).ToString())
-           })
+            @Html.EditorFor(
+               m => m[index].MobilePhoneNumber,
+               new { FieldName = Html.NameFor(m=>m[index].MobilePhoneNumber) }
+           )
             @Html.ValidationMessageFor(m => m[index].MobilePhoneNumber)
         </div>
         <div>

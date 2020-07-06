@@ -22,6 +22,8 @@ namespace Codesanook.EventManagement.Models {
 
         [DisplayName("Mobile phone number")]
         [Required]
+        //[UIHint("PhoneNumber")]
+        [DataType(DataType.PhoneNumber)]
         public virtual string MobilePhoneNumber { get; set; }
 
         [DisplayName("Organization name")]
