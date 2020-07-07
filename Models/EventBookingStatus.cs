@@ -8,11 +8,14 @@
         - If a user click start over, change status to reject/delete/cancel and show blank form
     */
     public enum EventBookingStatus {
-        Incomplete, // => A user hasn't finished booking. 
-        Unpaid, // => Waiting for the payment  
-        Verifying,
-        Paid , //=> A user's already paid a successful booking   == verified
-        Cancelled, // A user does not finish booking and cancels
-        Refunded // = A user cancels and get money back
+        Uncomfirmed, // A user hasn't click confirm.
+        Comfirmed, // Waiting for the payment after click confirm.
+
+        Verifying, // After a user upload a slip.
+        InvalidPayment, // Payment is not successful.  
+        Successful, // A user's already paid a successful booking == verified == success
+
+        Cancelled, // A user does not finish booking and cancels a booking.
+        Refunded // A user has successful booking but cancels to get money back.
     }
 }

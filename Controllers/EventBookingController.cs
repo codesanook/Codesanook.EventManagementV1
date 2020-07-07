@@ -79,7 +79,7 @@ namespace Codesanook.EventManagement.Controllers {
                     Event = eventPart.Record,
                     User = user.As<UserPart>().Record,
                     BookingDateTimeUtc = DateTime.Now,
-                    Status = EventBookingStatus.Unpaid,
+                    Status = EventBookingStatus.Uncomfirmed,
                 };
                 eventAttendees.ForEach(a => eventBooking.AddEventAttendee(a));
 
@@ -128,7 +128,7 @@ namespace Codesanook.EventManagement.Controllers {
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
                 .SingleOrDefault(b => b.Id == id);
-            eventBookings.Status = EventBookingStatus.Verifying;
+            eventBookings.Status = EventBookingStatus.Comfirmed;
             session.Update(eventBookings);
 
             return RedirectToAction(nameof(RegisterResult), new { id });
