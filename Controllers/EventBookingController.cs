@@ -83,11 +83,11 @@ namespace Codesanook.EventManagement.Controllers {
                 };
                 eventAttendees.ForEach(a => eventBooking.AddEventAttendee(a));
 
-                session.Save(eventBooking);
+                var lastId = session.Save(eventBooking);
                 // Because we set cascase all so the flow will be:  
                 // Insert a new EventBookingRecord
                 // Insert a new EventAttendeeRecord
-                return RedirectToAction(nameof(RegisterConfirm), new { id });
+                return RedirectToAction(nameof(RegisterConfirm), new { id = lastId });
             }
 
             var viewModel = new EventBookingRegisterViewModel() {
@@ -103,7 +103,22 @@ namespace Codesanook.EventManagement.Controllers {
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
                 .SingleOrDefault(b => b.Id == id);
-            return View(eventBookings);
+
+            var eventPart = contentManager.Get<EventPart>(eventBookings.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBookings.User.Id);
+
+            var viewModel = new EventBookingViewModel() {
+                Id = eventBookings.Id,
+                Event = eventPart,
+                User = userPart,
+                BookingDateTimeUtc = eventBookings.BookingDateTimeUtc,
+                Status = eventBookings.Status,
+                PaidDateTimeUtc = eventBookings.PaidDateTimeUtc,
+                PaymentConfirmationAttachementFileUrl = eventBookings.PaymentConfirmationAttachementFileUrl,
+                EventAttendees = eventBookings.EventAttendees
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -113,7 +128,10 @@ namespace Codesanook.EventManagement.Controllers {
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
                 .SingleOrDefault(b => b.Id == id);
-            return RedirectToAction(nameof(RegisterResult), new { id = id });
+            eventBookings.Status = EventBookingStatus.Verifying;
+            session.Update(eventBookings);
+
+            return RedirectToAction(nameof(RegisterResult), new { id });
         }
 
 
@@ -122,8 +140,23 @@ namespace Codesanook.EventManagement.Controllers {
             var session = transactionManager.GetSession();
             // TODO get eager load children
             var eventBookings = session.Query<EventBookingRecord>()
-                .SingleOrDefault(b => b.Id == id);
-            return View(eventBookings);
+            .SingleOrDefault(b => b.Id == id);
+
+            var eventPart = contentManager.Get<EventPart>(eventBookings.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBookings.User.Id);
+
+            var viewModel = new EventBookingViewModel() {
+                Id = eventBookings.Id,
+                Event = eventPart,
+                User = userPart,
+                BookingDateTimeUtc = eventBookings.BookingDateTimeUtc,
+                Status = eventBookings.Status,
+                PaidDateTimeUtc = eventBookings.PaidDateTimeUtc,
+                PaymentConfirmationAttachementFileUrl = eventBookings.PaymentConfirmationAttachementFileUrl,
+                EventAttendees = eventBookings.EventAttendees
+            };
+
+            return View(viewModel);
         }
 
     }

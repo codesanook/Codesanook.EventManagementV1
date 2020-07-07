@@ -1,14 +1,51 @@
-﻿@using Codesanook.EventManagement.Models
+﻿@using Codesanook.EventManagement.ViewModels
 @using Codesanook.EventManagement.Controllers
-@model EventBookingRecord
+@model EventBookingViewModel
+@{
+    string GetDateComponents(DateTime beginDate, DateTime endDate)
+    {
+        const string dateFormat = "d MMM yyyy";
+        // 1 May 2020
+        if (beginDate.Date == endDate.Date)
+        {
+            return beginDate.ToString(dateFormat);
+        }
 
+        // 1 - 10 May 2020
+        if ((beginDate.Month == endDate.Month) && (beginDate.Year == endDate.Year))
+        {
+            return beginDate.Day.ToString() + " - " + endDate.ToString(dateFormat);
+        }
+
+        // 1 May - 10 June 2020
+        if (beginDate.Year == endDate.Year)
+        {
+            return beginDate.ToString("d MMM") + " - " + endDate.ToString(dateFormat);
+        }
+
+        // 1 May 2020 - 1 May 2021
+        return beginDate.ToString(dateFormat) + " - " + endDate.ToString(dateFormat);
+    }
+}
 <h1 class="text-center">@Html.TitleForPage(T("Review an event's registeration").ToString())</h1>
 <div class="row">
     <div class="col-12 offset-md-3 col-md-6">
-        <h4>Event: Van Gogh. Life and Art</h4>
-        <p class="mt-3"><i class="fa fa-calendar main-color mr-2"></i> 4 มิ.ย. - 31 ธ.ค. 2563</p>
-        <p><i class="fa fa-clock-o main-color mr-2"></i> 11:00 - 20:00 (GMT+7)</p>
-        <p><i class="fa fa-map-pin main-color mr-2"></i> MODA Gallery ชั้น 2 ศูนย์การค้าริเวอร์ซิตี้ แบงค๊อก</p>
+        <h4>Event: @Model.Event.Title</h4>
+        <p>
+            @if (Model.Event.BeginDateTimeUtc.HasValue && Model.Event.EndDateTimeUtc.HasValue)
+            {
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                @GetDateComponents(Model.Event.BeginDateTimeUtc.Value, Model.Event.EndDateTimeUtc.Value)
+            }
+        </p>
+        <p>
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <span>@(Model.Event.BeginDateTimeUtc.HasValue ? Model.Event.BeginDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>-</span>
+            <span>@(Model.Event.EndDateTimeUtc.HasValue ? Model.Event.EndDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>(GMT+7)</span>
+        </p>
+        <p><i class="fa fa-map-pin main-color mr-2"></i> @Model.Event.Location</p>
         <h6 class="mt-4">
             <strong>Please revise your information.</strong>
         </h6>
@@ -51,7 +88,7 @@
                 @using (Html.BeginFormAntiForgeryPost(
                     Url.Action(
                         nameof(EventBookingController.RegisterConfirm),
-                        new { id = 18 }
+                        new { id = Model.Id }
                     )
                 ))
                 {

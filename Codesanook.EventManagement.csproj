@@ -146,6 +146,7 @@
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="ShellEvent.cs" />
     <Compile Include="ViewModels\EventBookingRegisterViewModel.cs" />
+    <Compile Include="ViewModels\EventBookingViewModel.cs" />
     <Compile Include="ViewModels\EventDisplayViewModel.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
