@@ -1,5 +1,4 @@
 ﻿@using Codesanook.EventManagement.ViewModels
-@using Codesanook.EventManagement.Controllers
 @model EventDisplayViewModel
 @{
     Script.Require("React").AtHead();
@@ -9,11 +8,10 @@
 
     // FYI Model.Id is Shape id and is not the same as our business event item ID
     var actionUrl = Url.RouteUrl(
-        "EventBooking",
+        "EventBookingRegister",
         new
         {
-            action = nameof(EventBookingController.Register),
-            id = Model.EventId,
+            eventId = Model.EventId,
         }
     );
 }

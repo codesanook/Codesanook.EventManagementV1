@@ -77,23 +77,26 @@
             }
         }
         <div class="row mt-4">
+            @{
+                var registerEventUrl = Url.Action(
+                    nameof(EventBookingController.Register), new { eventBookingId = Model.Id, eventId = Model.Event.Id }
+                );
+            }
             <div class="col">
-                <button class="btn btn-secondary" onclick="window.history.back()">
+                <a class="btn btn-secondary" href="@registerEventUrl">
                     <i class="fa fa-arrow-left"></i> Back to edit
-                </button>
+                </a>
             </div>
             <div class="col text-right">
-
-
                 @using (Html.BeginFormAntiForgeryPost(
                     Url.Action(
                         nameof(EventBookingController.RegisterConfirm),
-                        new { id = Model.Id }
+                        new { eventBookingId = Model.Id }
                     )
                 ))
                 {
                     <button class="btn btn-secondary" type="submit">
-                        Cofirm
+                        Confirm
                     </button>
                 }
             </div>

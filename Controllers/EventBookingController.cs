@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Web.Mvc;
 using Codesanook.EventManagement.Models;
-using Codesanook.EventManagement.Services;
 using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
 using NHibernate.Util;
@@ -41,7 +39,7 @@ namespace Codesanook.EventManagement.Controllers {
             return View(eventBookings);
         }
 
-        public ActionResult Details(int id) {
+        public ActionResult Details(int eventBookingId) {
             // Get all booking with status paid/unpaid 
             var session = transactionManager.GetSession();
             var eventBookings = session
@@ -50,13 +48,13 @@ namespace Codesanook.EventManagement.Controllers {
             return View(eventBookings);
         }
 
-        public ActionResult Register(int id, int numberOfAttendees) {
-            // https://haacked.com/archive/2008/10/23/model-binding-to-a-list.aspx/
-            var eventAttendees = Enumerable.Range(0, numberOfAttendees)
-                .Select(_ => new EventAttendeeRecord())
-                .ToList();
+        public ActionResult Register(int eventId, int? eventBookingId, int? numberOfAttendees) {
+            var eventAttendees = GetEventAttendees(
+                eventBookingId,
+                numberOfAttendees
+            );
 
-            var eventPart = contentManager.Get<EventPart>(id);
+            var eventPart = contentManager.Get<EventPart>(eventId);
             var viewModel = new EventBookingRegisterViewModel() {
                 Event = eventPart,
                 EventAttendees = eventAttendees
@@ -65,44 +63,56 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Register(int id, IList<EventAttendeeRecord> eventAttendees) {
-            // Form validation
+        public ActionResult Register(
+            int eventId,
+            int? eventBookingId,
+            IList<EventAttendeeRecord> eventAttendees
+        ) {
+            var eventPart = contentManager.Get<EventPart>(eventId);
 
-            var eventPart = contentManager.Get<EventPart>(id);
+            // Early return
+            if (!ModelState.IsValid) {
+                var viewModel = new EventBookingRegisterViewModel() {
+                    Event = eventPart,
+                    EventAttendees = eventAttendees
+                };
+                return View(viewModel);
+            }
 
-            if (ModelState.IsValid) {
+            var session = transactionManager.GetSession();
+            if (eventBookingId.HasValue) {
+                // Update only EventAttendee directly.
+                // They are disconnected objects, no objects in a session so update is safe  
+                eventAttendees.ForEach(a => session.Update(a));
+            }
+            else {
                 // Save with NHibernate session
-                var session = transactionManager.GetSession();
                 var user = authenticationService.GetAuthenticatedUser();
-
                 var eventBooking = new EventBookingRecord() {
                     Event = eventPart.Record,
                     User = user.As<UserPart>().Record,
-                    BookingDateTimeUtc = DateTime.Now,
                     Status = EventBookingStatus.Uncomfirmed,
                 };
+                // Add each attendee to event booking
                 eventAttendees.ForEach(a => eventBooking.AddEventAttendee(a));
-
-                var lastId = session.Save(eventBooking);
-                // Because we set cascase all so the flow will be:  
-                // Insert a new EventBookingRecord
-                // Insert a new EventAttendeeRecord
-                return RedirectToAction(nameof(RegisterConfirm), new { id = lastId });
+                session.Save(eventBooking);
+                // Set a saved event booking Id
+                eventBookingId = eventBooking.Id;
             }
 
-            var viewModel = new EventBookingRegisterViewModel() {
-                Event = eventPart,
-                EventAttendees = eventAttendees
-            };
-            return View(viewModel);
+            // Because we set cascase all so the flow will be:  
+            // Insert a new EventBookingRecord
+            // Insert a new EventAttendeeRecord
+            return RedirectToAction(
+                nameof(RegisterConfirm),
+                new { eventBookingId = eventBookingId.Value }
+            );
         }
 
-        public ActionResult RegisterConfirm(int id) {
-            // Sometimes you need to delete mapping cache
+        public ActionResult RegisterConfirm(int eventBookingId) {
             var session = transactionManager.GetSession();
             // TODO get eager load children
-            var eventBookings = session.Query<EventBookingRecord>()
-                .SingleOrDefault(b => b.Id == id);
+            var eventBookings = session.Get<EventBookingRecord>(eventBookingId);
 
             var eventPart = contentManager.Get<EventPart>(eventBookings.Event.Id);
             var userPart = contentManager.Get<UserPart>(eventBookings.User.Id);
@@ -117,48 +127,55 @@ namespace Codesanook.EventManagement.Controllers {
                 PaymentConfirmationAttachementFileUrl = eventBookings.PaymentConfirmationAttachementFileUrl,
                 EventAttendees = eventBookings.EventAttendees
             };
-
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult RegisterConfirm(int id, FormCollection form) {
-            // Sometimes you need to delete mapping cache
+        public ActionResult RegisterConfirm(int eventBookingId, FormCollection form) {
             var session = transactionManager.GetSession();
-            // TODO get eager load children
-            var eventBookings = session.Query<EventBookingRecord>()
-                .SingleOrDefault(b => b.Id == id);
-            eventBookings.Status = EventBookingStatus.Comfirmed;
-            session.Update(eventBookings);
-
-            return RedirectToAction(nameof(RegisterResult), new { id });
+            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
+            eventBooking.Status = EventBookingStatus.Comfirmed;
+            eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
+            // We don't need to call update for connected object xxx session.Update(eventBooking);
+            return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
         }
 
-
-        public ActionResult RegisterResult(int id) {
+        public ActionResult RegisterResult(int eventBookingId) {
             // Sometimes you need to delete mapping cache
             var session = transactionManager.GetSession();
             // TODO get eager load children
-            var eventBookings = session.Query<EventBookingRecord>()
-            .SingleOrDefault(b => b.Id == id);
-
-            var eventPart = contentManager.Get<EventPart>(eventBookings.Event.Id);
-            var userPart = contentManager.Get<UserPart>(eventBookings.User.Id);
+            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
 
             var viewModel = new EventBookingViewModel() {
-                Id = eventBookings.Id,
+                Id = eventBooking.Id,
                 Event = eventPart,
                 User = userPart,
-                BookingDateTimeUtc = eventBookings.BookingDateTimeUtc,
-                Status = eventBookings.Status,
-                PaidDateTimeUtc = eventBookings.PaidDateTimeUtc,
-                PaymentConfirmationAttachementFileUrl = eventBookings.PaymentConfirmationAttachementFileUrl,
-                EventAttendees = eventBookings.EventAttendees
+                BookingDateTimeUtc = eventBooking.BookingDateTimeUtc,
+                Status = eventBooking.Status,
+                PaidDateTimeUtc = eventBooking.PaidDateTimeUtc,
+                PaymentConfirmationAttachementFileUrl = eventBooking.PaymentConfirmationAttachementFileUrl,
+                EventAttendees = eventBooking.EventAttendees
             };
 
             return View(viewModel);
         }
 
-    }
+        private IList<EventAttendeeRecord> GetEventAttendees(int? eventBookingId, int? numberOfAttendees) {
+            if (eventBookingId.HasValue) {
+                var session = transactionManager.GetSession();
+                var eventBookings = session
+                    .Query<EventBookingRecord>()
+                    .SingleOrDefault(b => b.Id == eventBookingId);
+                return eventBookings.EventAttendees;
+            }
 
+            // https://haacked.com/archive/2008/10/23/model-binding-to-a-list.aspx/
+            var eventAttendees = Enumerable.Range(0, numberOfAttendees.Value)
+                .Select(_ => new EventAttendeeRecord())
+                .ToList();
+            return eventAttendees;
+        }
+    }
 }

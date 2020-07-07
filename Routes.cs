@@ -13,15 +13,33 @@ namespace Codesanook.EventManagement {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() => new[] {
+
             new RouteDescriptor {
-                Name = "EventBooking",
+                Name = "EventBookingRegister",
                 Priority = 100,
                 Route = new Route(
-                    url:"event-booking/{action}/{id}",
+                    url:"EventBooking/Register/{eventId}/{eventBookingId}",
+                    defaults: new RouteValueDictionary {
+                        { "controller", "EventBooking" }, // no controller suffix
+                        { "action", "Register" },
+                        { "eventBookingId", UrlParameter.Optional },
+                    },
+                    constraints: new RouteValueDictionary(),
+                    dataTokens: new RouteValueDictionary {
+                        { "area", "Codesanook.EventManagement" }
+                    },
+                    routeHandler: new MvcRouteHandler()
+                )
+            },
+            new RouteDescriptor {
+                Name = "EventBookingAction",
+                Priority = 100,
+                Route = new Route(
+                    url:"EventBooking/{action}/{eventBookingId}",
                     defaults: new RouteValueDictionary {
                         { "controller", "EventBooking" }, // no controller suffix
                         { "action", "Index" },
-                        { "id", UrlParameter.Optional },
+                        { "eventBookingId", UrlParameter.Optional },
                     },
                     constraints: new RouteValueDictionary(),
                     dataTokens: new RouteValueDictionary {
