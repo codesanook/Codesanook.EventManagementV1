@@ -110,23 +110,7 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         public ActionResult RegisterConfirm(int eventBookingId) {
-            var session = transactionManager.GetSession();
-            // TODO get eager load children
-            var eventBookings = session.Get<EventBookingRecord>(eventBookingId);
-
-            var eventPart = contentManager.Get<EventPart>(eventBookings.Event.Id);
-            var userPart = contentManager.Get<UserPart>(eventBookings.User.Id);
-
-            var viewModel = new EventBookingViewModel() {
-                Id = eventBookings.Id,
-                Event = eventPart,
-                User = userPart,
-                BookingDateTimeUtc = eventBookings.BookingDateTimeUtc,
-                Status = eventBookings.Status,
-                PaidDateTimeUtc = eventBookings.PaidDateTimeUtc,
-                PaymentConfirmationAttachementFileUrl = eventBookings.PaymentConfirmationAttachementFileUrl,
-                EventAttendees = eventBookings.EventAttendees
-            };
+            var viewModel = GetEventBookingViewModel(eventBookingId);
             return View(viewModel);
         }
 
@@ -142,23 +126,7 @@ namespace Codesanook.EventManagement.Controllers {
 
         public ActionResult RegisterResult(int eventBookingId) {
             // Sometimes you need to delete mapping cache
-            var session = transactionManager.GetSession();
-            // TODO get eager load children
-            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
-            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
-            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
-
-            var viewModel = new EventBookingViewModel() {
-                Id = eventBooking.Id,
-                Event = eventPart,
-                User = userPart,
-                BookingDateTimeUtc = eventBooking.BookingDateTimeUtc,
-                Status = eventBooking.Status,
-                PaidDateTimeUtc = eventBooking.PaidDateTimeUtc,
-                PaymentConfirmationAttachementFileUrl = eventBooking.PaymentConfirmationAttachementFileUrl,
-                EventAttendees = eventBooking.EventAttendees
-            };
-
+            var viewModel = GetEventBookingViewModel(eventBookingId);
             return View(viewModel);
         }
 
@@ -176,6 +144,50 @@ namespace Codesanook.EventManagement.Controllers {
                 .Select(_ => new EventAttendeeRecord())
                 .ToList();
             return eventAttendees;
+        }
+
+        private EventBookingViewModel GetEventBookingViewModel(int eventBookingId) {
+
+            var session = transactionManager.GetSession();
+
+            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
+
+            var result = new EventBookingViewModel() {
+                Id = eventBooking.Id,
+                Event = eventPart,
+                User = userPart,
+                BookingDateTimeUtc = eventBooking.BookingDateTimeUtc,
+                Status = eventBooking.Status,
+                PaidDateTimeUtc = eventBooking.PaidDateTimeUtc,
+                PaymentConfirmationAttachementFileUrl = eventBooking.PaymentConfirmationAttachementFileUrl,
+                EventAttendees = eventBooking.EventAttendees
+            };
+
+            return result;
+        }
+
+        public static string GetDateComponents(DateTime beginDate, DateTime endDate) {
+
+            const string dateFormat = "d MMM yyyy";
+            // 1 May 2020
+            if (beginDate.Date == endDate.Date) {
+                return beginDate.ToString(dateFormat);
+            }
+
+            // 1 - 10 May 2020
+            if ((beginDate.Month == endDate.Month) && (beginDate.Year == endDate.Year)) {
+                return beginDate.Day.ToString() + " - " + endDate.ToString(dateFormat);
+            }
+
+            // 1 May - 10 June 2020
+            if (beginDate.Year == endDate.Year) {
+                return beginDate.ToString("d MMM") + " - " + endDate.ToString(dateFormat);
+            }
+
+            // 1 May 2020 - 1 May 2021
+            return beginDate.ToString(dateFormat) + " - " + endDate.ToString(dateFormat);
         }
     }
 }

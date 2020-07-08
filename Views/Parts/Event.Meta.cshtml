@@ -1,43 +1,10 @@
 ﻿@using Codesanook.EventManagement.ViewModels;
+@using Codesanook.EventManagement.Controllers
 @model EventDisplayViewModel
-@{
-    string[] GetDateComponents(DateTime beginDate, DateTime endDate)
-    {
-        const string dateFormat = "d MMM yyyy";
-        // 1 May 2020
-        if (beginDate.Date == endDate.Date)
-        {
-            return new[] { beginDate.ToString(dateFormat) };
-        }
-
-        // 1 - 10 May 2020
-        if ((beginDate.Month == endDate.Month) && (beginDate.Year == endDate.Year))
-        {
-            return new[] { beginDate.Day.ToString(), "-", endDate.ToString(dateFormat) };
-        }
-
-        // 1 May - 10 June 2020
-        if (beginDate.Year == endDate.Year)
-        {
-            return new[] { beginDate.ToString("d MMM"), "-", endDate.ToString(dateFormat) };
-        }
-
-        // 1 May 2020 - 1 May 2021
-        return new[] { beginDate.ToString(dateFormat), "-", endDate.ToString(dateFormat) };
-    }
-}
-
 <div class="date-box">
     <p>
         <i class="fa fa-calendar" aria-hidden="true"></i>
-
-        @foreach (var item in GetDateComponents(
-            Model.BeginDateTimeUtc,
-            Model.EndDateTimeUtc
-        ))
-        {
-            <span>@item</span>
-        }
+        @EventBookingController.GetDateComponents(Model.BeginDateTimeUtc, Model.EndDateTimeUtc)
     </p>
     <p>
         <i class="fa fa-clock-o" aria-hidden="true"></i>

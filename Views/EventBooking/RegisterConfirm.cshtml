@@ -1,32 +1,6 @@
 ﻿@using Codesanook.EventManagement.ViewModels
 @using Codesanook.EventManagement.Controllers
 @model EventBookingViewModel
-@{
-    string GetDateComponents(DateTime beginDate, DateTime endDate)
-    {
-        const string dateFormat = "d MMM yyyy";
-        // 1 May 2020
-        if (beginDate.Date == endDate.Date)
-        {
-            return beginDate.ToString(dateFormat);
-        }
-
-        // 1 - 10 May 2020
-        if ((beginDate.Month == endDate.Month) && (beginDate.Year == endDate.Year))
-        {
-            return beginDate.Day.ToString() + " - " + endDate.ToString(dateFormat);
-        }
-
-        // 1 May - 10 June 2020
-        if (beginDate.Year == endDate.Year)
-        {
-            return beginDate.ToString("d MMM") + " - " + endDate.ToString(dateFormat);
-        }
-
-        // 1 May 2020 - 1 May 2021
-        return beginDate.ToString(dateFormat) + " - " + endDate.ToString(dateFormat);
-    }
-}
 <h1 class="text-center">@Html.TitleForPage(T("Review an event's registeration").ToString())</h1>
 <div class="row">
     <div class="col-12 offset-md-3 col-md-6">
@@ -35,7 +9,7 @@
             @if (Model.Event.BeginDateTimeUtc.HasValue && Model.Event.EndDateTimeUtc.HasValue)
             {
                 <i class="fa fa-calendar" aria-hidden="true"></i>
-                @GetDateComponents(Model.Event.BeginDateTimeUtc.Value, Model.Event.EndDateTimeUtc.Value)
+                @EventBookingController.GetDateComponents(Model.Event.BeginDateTimeUtc.Value, Model.Event.EndDateTimeUtc.Value)
             }
         </p>
         <p>
@@ -76,7 +50,7 @@
                 <hr />
             }
         }
-        <div class="row mt-4">
+        <div class="row mt-4 pb-4">
             @{
                 var registerEventUrl = Url.Action(
                     nameof(EventBookingController.Register), new { eventBookingId = Model.Id, eventId = Model.Event.Id }
