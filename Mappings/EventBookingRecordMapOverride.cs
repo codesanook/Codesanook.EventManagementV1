@@ -1,6 +1,7 @@
 ﻿using Codesanook.EventManagement.Models;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
+using FluentNHibernate.Mapping;
 
 namespace Codesanook.EventManagement.Mappings {
     public class EventBookingRecordMapOverride : IAutoMappingOverride<EventBookingRecord> {
@@ -21,11 +22,15 @@ namespace Codesanook.EventManagement.Mappings {
                 .Cascade.All() // Also insert a child item when save insert this object
                 .KeyColumn("EventBookingId"); // Foriegn key on EventAttendeeRecord table
 
-            // To store the name or the value of your enum members. To store it by name, just map like this:
-            // mapping.Map(x=>x.Status).CustomType<GenericEnumMapper<EventBookingStatus>>().Not.Nullable();
+            // To store it by name, just map like this
+             mapping
+                .Map(x=>x.Status)
+                .CustomType<GenericEnumMapper<EventBookingStatus>>()
+                .Not.Nullable();
+
             // To store by value (int)
-            // https://stackoverflow.com/a/2605145/1872200
-            mapping.Map(x => x.Status).CustomType<int>().Not.Nullable();
+            // mapping.Map(x => x.Status).CustomType<int>().Not.Nullable();
+            // Ref https://stackoverflow.com/a/2605145/1872200
         }
     }
 }

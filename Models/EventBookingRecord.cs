@@ -9,9 +9,8 @@ namespace Codesanook.EventManagement.Models {
     public class EventBookingRecord {
 
         private IList<EventAttendeeRecord> eventAttendees;
-        public EventBookingRecord() {
+        public EventBookingRecord() =>
             eventAttendees = new List<EventAttendeeRecord>();
-        }
 
         public virtual int Id { get; set; }
         public virtual EventPartRecord Event { get; set; }
@@ -23,12 +22,8 @@ namespace Codesanook.EventManagement.Models {
         public virtual DateTime? PaidDateTimeUtc { get; set; }
         public virtual string PaymentConfirmationAttachementFileUrl { get; set; }
 
-        // Bi directional mapping
+        // Uni-directional mapping and get only
         public virtual IList<EventAttendeeRecord> EventAttendees => eventAttendees;
-
-        public void AddEventAttendee(EventAttendeeRecord eventAttendee) {
-            eventAttendees.Add(eventAttendee);
-            //eventAttendee.SetEventBooking(this);
-        }
+        public void AddEventAttendee(EventAttendeeRecord eventAttendee) => eventAttendees.Add(eventAttendee);
     }
 }

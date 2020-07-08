@@ -127,7 +127,7 @@ namespace Codesanook.EventManagement {
                     .Column<int>(nameof(EventBookingRecord.Id), column => column.PrimaryKey().Identity())
                     .Column<int>("EventId", column=> column.NotNull())
                     .Column<int>("UserId", column=> column.NotNull())
-                    .Column<int>(nameof(EventBookingRecord.Status), column=> column.NotNull())
+                    .Column<string>(nameof(EventBookingRecord.Status), column=> column.NotNull().WithLength(32))
 
                     .Column<DateTime>(nameof(EventBookingRecord.BookingDateTimeUtc))
                     .Column<DateTime>(nameof(EventBookingRecord.PaidDateTimeUtc))
