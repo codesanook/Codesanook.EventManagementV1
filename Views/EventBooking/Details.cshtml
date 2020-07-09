@@ -1,31 +1,111 @@
-﻿@using Codesanook.EventManagement.Models
+﻿@using Codesanook.EventManagement.ViewModels
+@using Codesanook.EventManagement.Models
 @using Codesanook.EventManagement.Controllers
-@model IList<EventBookingRecord>
+@model EventBookingViewModel
 
+@{
+
+    string GetClassStatus(EventBookingStatus Status)
+    {
+        var className = "light";
+
+        switch (Status)
+        {
+            case EventBookingStatus.Uncomfirmed: className = "light"; break;
+
+            case EventBookingStatus.Comfirmed: className = "primary"; break;
+
+            case EventBookingStatus.Verifying: className = "info"; break;
+
+            case EventBookingStatus.Successful: className = "success"; break;
+
+            case EventBookingStatus.InvalidPayment: className = "warning"; break;
+
+            case EventBookingStatus.Cancelled: className = "danger"; break;
+
+            case EventBookingStatus.Refunded: className = "secondary"; break;
+        }
+
+        return className;
+
+    }
+}
 <h1 class="text-center">@Html.TitleForPage(T("Register an event").ToString())</h1>
-<div class="list-group">
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small>3 days ago</small>
+<div class="row">
+    <div class="col-12 offset-md-3 col-md-6">
+        <h4>Event: @Model.Event.Title</h4>
+        <p>
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            @Model.Event.GetFormattedSchedule()
+        </p>
+        <p>
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <span>@(Model.Event.BeginDateTimeUtc.HasValue ? Model.Event.BeginDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>-</span>
+            <span>@(Model.Event.EndDateTimeUtc.HasValue ? Model.Event.EndDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>(GMT+7)</span>
+        </p>
+        <p><i class="fa fa-map-pin main-color mr-2"></i> @Model.Event.Location</p>
+        <h4>
+            <small>Status :</small>
+            <span class="badge badge-@GetClassStatus(Model.Status)">
+                @Model.Status.ToString()
+            </span>
+        </h4>
+        <h6 class="mt-4">
+            <strong>Please revise your information.</strong>
+        </h6>
+        @if (Model != null)
+        {
+            foreach (var attendee in Model.EventAttendees)
+            {
+                <div class="row mt-3">
+                    <div class="col-3">First Name:</div>
+                    <div class="col-9">@attendee.FirstName</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">Last Name:</div>
+                    <div class="col-9">@attendee.LastName</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">Email:</div>
+                    <div class="col-9">@attendee.Email</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">Mobile phone number:</div>
+                    <div class="col-9">@attendee.MobilePhoneNumber</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">Organization:</div>
+                    <div class="col-9">@attendee.OrganizationName</div>
+                </div>
+                <hr />
+            }
+        }
+        @using (Html.BeginFormAntiForgeryPost())
+        {
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="ImageFile" id="ImageFile" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-secondary" href="@Url.Action(nameof(EventBookingController.Index))">
+                        Back
+                    </a>
+                </div>
+                <div class="colt text-right">
+                    <input type="hidden" name="eventBookingId" value="@Model.Id" />
+                    <button class="btn btn-secondary" type="submit">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        }
     </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small>Donec id elit non mi porta.</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small class="text-muted">Donec id elit non mi porta.</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small class="text-muted">Donec id elit non mi porta.</small>
-  </a>
 </div>

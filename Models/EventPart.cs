@@ -83,6 +83,7 @@ namespace Codesanook.EventManagement.Models {
             // 1 May 2020 - 1 May 2021
             return BeginDateTimeUtc.Value.ToString(dateFormat) + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
         }
+
     }
 }
 

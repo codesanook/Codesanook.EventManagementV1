@@ -36,16 +36,22 @@ namespace Codesanook.EventManagement.Controllers {
             var eventBookings = session
                 .Query<EventBookingRecord>()
                 .ToList();
-            return View(eventBookings);
+
+            List<EventBookingViewModel> viewModels = new List<EventBookingViewModel>();
+            foreach (var eb in eventBookings) {
+                viewModels.Add(GetEventBookingViewModel(eb.Id)); ;
+            }
+            return View(viewModels);
         }
 
         public ActionResult Details(int eventBookingId) {
-            // Get all booking with status paid/unpaid 
-            var session = transactionManager.GetSession();
-            var eventBookings = session
-                .Query<EventBookingRecord>()
-                .ToList();
-            return View(eventBookings);
+            var viewModel = GetEventBookingViewModel(eventBookingId);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Details(FormCollection form) {
+            return View();
         }
 
         public ActionResult Register(int eventId, int? eventBookingId, int? numberOfAttendees) {

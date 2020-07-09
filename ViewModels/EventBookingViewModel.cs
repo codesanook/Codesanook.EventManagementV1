@@ -16,5 +16,23 @@ namespace Codesanook.EventManagement.ViewModels {
         public DateTime? PaidDateTimeUtc { get; set; }
         public string PaymentConfirmationAttachementFileUrl { get; set; }
         public IList<EventAttendeeRecord> EventAttendees { get; set; }
+        public decimal GetTotalPrice() {
+            return Math.Round(EventAttendees.Count * Event.TicketPrice,2);
+        }
+
+        public string GetTextFromNow() {
+
+            var toDay = DateTime.Now;
+            if (BookingDateTimeUtc.HasValue) {
+                int daysDiff = (toDay.Date - BookingDateTimeUtc.Value.Date).Days;
+                if (daysDiff > 1) {
+                    return daysDiff + " days ago";
+                }
+
+                return "today";
+            }
+
+            return "";
+        }
     }
 }

@@ -1,31 +1,53 @@
 ﻿@using Codesanook.EventManagement.Models
+@using Codesanook.EventManagement.ViewModels
 @using Codesanook.EventManagement.Controllers
-@model IList<EventBookingRecord>
+@model List<EventBookingViewModel>
+@{
 
+    string GetClassStatus(EventBookingStatus Status)
+    {
+        var className = "light";
+
+        switch (Status)
+        {
+            case EventBookingStatus.Uncomfirmed: className = "light"; break;
+
+            case EventBookingStatus.Comfirmed: className = "primary"; break;
+
+            case EventBookingStatus.Verifying: className = "info"; break;
+
+            case EventBookingStatus.Successful: className = "success"; break;
+
+            case EventBookingStatus.InvalidPayment: className = "warning"; break;
+
+            case EventBookingStatus.Cancelled: className = "danger"; break;
+
+            case EventBookingStatus.Refunded: className = "secondary"; break;
+        }
+
+        return className;
+
+    }
+}
 <h1 class="text-center">@Html.TitleForPage(T("All booked events").ToString())</h1>
 <div class="list-group">
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small>3 days ago</small>
-    </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small>Donec id elit non mi porta.</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small class="text-muted">Donec id elit non mi porta.</small>
-  </a>
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">List group item heading</h5>
-      <small class="text-muted">3 days ago</small>
-    </div>
-    <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-    <small class="text-muted">Donec id elit non mi porta.</small>
-  </a>
+    @foreach (var eventBooking in Model)
+    {
+        <a href="@Url.Action(nameof(EventBookingController.Details),
+                new { eventBookingId = eventBooking.Id })"
+           class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@eventBooking.Event.Title</h5>
+                <small>@eventBooking.GetTextFromNow()</small>
+            </div>
+            <p class="mb-1">
+                @eventBooking.EventAttendees.Count() people
+                @eventBooking.GetTotalPrice() Bath
+            </p>
+            <span class="badge badge-@GetClassStatus(eventBooking.Status)">
+                @eventBooking.Status.ToString()
+            </span>
+        </a>
+
+    }
 </div>
