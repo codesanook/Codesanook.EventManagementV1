@@ -6,11 +6,8 @@
     <div class="col-12 offset-md-3 col-md-6">
         <h4>Event: @Model.Event.Title</h4>
         <p>
-            @if (Model.Event.BeginDateTimeUtc.HasValue && Model.Event.EndDateTimeUtc.HasValue)
-            {
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-                @EventBookingController.GetDateComponents(Model.Event.BeginDateTimeUtc.Value, Model.Event.EndDateTimeUtc.Value)
-            }
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            @Model.Event.GetFormattedSchedule()
         </p>
         <p>
             <i class="fa fa-clock-o" aria-hidden="true"></i>

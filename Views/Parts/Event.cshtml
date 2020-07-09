@@ -1,6 +1,8 @@
-﻿@using Codesanook.EventManagement.ViewModels
-@model EventDisplayViewModel
+﻿@using Codesanook.EventManagement.Models
+@{
+    var eventPart = Model.Event as EventPart;
+}
 
 <div>
-    Location: @Html.Raw(Model.Location)
+    Location: @Html.Raw(eventPart.Location)
 </div>

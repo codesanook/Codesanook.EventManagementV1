@@ -1,5 +1,7 @@
-﻿@using Codesanook.EventManagement.ViewModels
-@model EventDisplayViewModel
+﻿@using Codesanook.EventManagement.Models
+@{
+    var eventPart = Model.Event as EventPart;
+}
 @{
     Script.Require("React").AtHead();
     Script.Require("ReactDOM").AtHead();
@@ -11,7 +13,7 @@
         "EventBookingRegister",
         new
         {
-            eventId = Model.EventId,
+            eventId = eventPart.Id,
         }
     );
 }
@@ -23,8 +25,8 @@
 @Html.React(
     "CodesanookEventManagement.BuyTicket", new
     {
-        ticketPrice = Model.TicketPrice,
-        availableTicketCount = Model.AvailableTicketCount,
+        ticketPrice = eventPart.TicketPrice,
+        availableTicketCount = eventPart.MaxAttendees,
         actionUrl = actionUrl
     }
 )

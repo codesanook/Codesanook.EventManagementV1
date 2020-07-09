@@ -61,6 +61,28 @@ namespace Codesanook.EventManagement.Models {
             get => Record.TicketPrice;
             set => Record.TicketPrice = value;
         }
+
+        public string GetFormattedSchedule() {
+            const string dateFormat = "d MMM yyyy";
+            // 1 May 2020, same day
+            if (BeginDateTimeUtc.Value.Date == EndDateTimeUtc.Value.Date) {
+                return BeginDateTimeUtc.Value.ToString(dateFormat);
+            }
+
+            // 1 - 10 May 2020
+            if ((BeginDateTimeUtc.Value.Month == EndDateTimeUtc.Value.Month)
+                && (BeginDateTimeUtc.Value.Year == EndDateTimeUtc.Value.Year)) {
+                return BeginDateTimeUtc.Value.Day.ToString() + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+            }
+
+            // 1 May - 10 June 2020
+            if (BeginDateTimeUtc.Value.Year == EndDateTimeUtc.Value.Year) {
+                return BeginDateTimeUtc.Value.ToString("d MMM") + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+            }
+
+            // 1 May 2020 - 1 May 2021
+            return BeginDateTimeUtc.Value.ToString(dateFormat) + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+        }
     }
 }
 

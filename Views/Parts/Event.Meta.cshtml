@@ -1,20 +1,22 @@
-﻿@using Codesanook.EventManagement.ViewModels;
-@using Codesanook.EventManagement.Controllers
-@model EventDisplayViewModel
+﻿@using Codesanook.EventManagement.Models
+@{
+    var eventPart = Model.Event as EventPart;
+}
+
 <div class="date-box">
     <p>
         <i class="fa fa-calendar" aria-hidden="true"></i>
-        @EventBookingController.GetDateComponents(Model.BeginDateTimeUtc, Model.EndDateTimeUtc)
+        @eventPart.GetFormattedSchedule()
     </p>
     <p>
         <i class="fa fa-clock-o" aria-hidden="true"></i>
-        <span>@Model.BeginDateTimeUtc.ToString("HH:mm")</span>
+        <span>@eventPart.BeginDateTimeUtc.Value.ToString("HH:mm")</span>
         <span>-</span>
-        <span>@Model.EndDateTimeUtc.ToString("HH:mm")</span>
+        <span>@eventPart.EndDateTimeUtc.Value.ToString("HH:mm")</span>
         <span>(GMT+7)</span>
     </p>
     <p>
         <i class="fa fa-map-marker" aria-hidden="true"></i>
-        <span>@Model.Location</span>
+        <span>@eventPart.Location</span>
     </p>
 </div>

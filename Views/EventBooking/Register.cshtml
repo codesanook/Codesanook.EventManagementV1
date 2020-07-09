@@ -7,11 +7,8 @@
     <div class="col-12 offset-md-3 col-md-6 pb-4">
         <h4>Event: @Model.Event.Title</h4>
         <p>
-            @if (Model.Event.BeginDateTimeUtc.HasValue && Model.Event.EndDateTimeUtc.HasValue)
-            {
-                <i class="fa fa-calendar" aria-hidden="true"></i>
-                @EventBookingController.GetDateComponents(Model.Event.BeginDateTimeUtc.Value, Model.Event.EndDateTimeUtc.Value)
-            }
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            @Model.Event.GetFormattedSchedule()
         </p>
         <p>
             <i class="fa fa-clock-o" aria-hidden="true"></i>
@@ -25,12 +22,7 @@
             <strong>Please fill your information.</strong>
         </h6>
 
-        @using (Html.BeginFormAntiForgeryPost(
-            Url.Action(
-                nameof(EventBookingController.Register),
-                new { id = Model.Event.Id }
-            )
-        ))
+        @using (Html.BeginFormAntiForgeryPost())
         {
             @Html.Partial("_AttendeeFields", Model.EventAttendees)
             <input id="contact-form-submit" class="form-submit-btn" type="submit" value="SUBMIT">

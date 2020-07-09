@@ -147,7 +147,6 @@
     <Compile Include="ShellEvent.cs" />
     <Compile Include="ViewModels\EventBookingRegisterViewModel.cs" />
     <Compile Include="ViewModels\EventBookingViewModel.cs" />
-    <Compile Include="ViewModels\EventDisplayViewModel.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +237,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EventBooking\_AttendeeFields.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

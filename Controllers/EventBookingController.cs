@@ -120,6 +120,9 @@ namespace Codesanook.EventManagement.Controllers {
             var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
             eventBooking.Status = EventBookingStatus.Comfirmed;
             eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
+
+            // Todo send event booking confirmation email to a user 
+
             // We don't need to call update for connected object xxx session.Update(eventBooking);
             return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
         }
@@ -147,9 +150,7 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         private EventBookingViewModel GetEventBookingViewModel(int eventBookingId) {
-
             var session = transactionManager.GetSession();
-
             var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
             var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
             var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
@@ -166,28 +167,6 @@ namespace Codesanook.EventManagement.Controllers {
             };
 
             return result;
-        }
-
-        public static string GetDateComponents(DateTime beginDate, DateTime endDate) {
-
-            const string dateFormat = "d MMM yyyy";
-            // 1 May 2020
-            if (beginDate.Date == endDate.Date) {
-                return beginDate.ToString(dateFormat);
-            }
-
-            // 1 - 10 May 2020
-            if ((beginDate.Month == endDate.Month) && (beginDate.Year == endDate.Year)) {
-                return beginDate.Day.ToString() + " - " + endDate.ToString(dateFormat);
-            }
-
-            // 1 May - 10 June 2020
-            if (beginDate.Year == endDate.Year) {
-                return beginDate.ToString("d MMM") + " - " + endDate.ToString(dateFormat);
-            }
-
-            // 1 May 2020 - 1 May 2021
-            return beginDate.ToString(dateFormat) + " - " + endDate.ToString(dateFormat);
         }
     }
 }

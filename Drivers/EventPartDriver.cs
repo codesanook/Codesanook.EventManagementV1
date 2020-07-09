@@ -17,7 +17,6 @@ using Orchard.Services;
 using System.Linq;
 using Orchard.Core.Common.Settings;
 using System.Web;
-using System.Web.UI.WebControls;
 
 namespace Codesanook.EventManagement.Drivers {
     //To have a part show in content type item, we need to have content part driver 
@@ -54,13 +53,7 @@ namespace Codesanook.EventManagement.Drivers {
             return Combined(
                 ContentShape(
                     "Parts_Event_Meta",
-                    () => {
-                        // EventDisplayViewModel must inherit from Shape
-                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event_Meta(typeof(EventDisplayViewModel));
-                        // This can be used object mapper.
-                        SetViewModelValuesFromPart(viewModel, part);
-                        return viewModel;
-                    }
+                    () => shapeHelper.Parts_Event_Meta(Event: part)
                 ),
                 ContentShape(
                     "Parts_Event_Body_Summary",
@@ -70,26 +63,17 @@ namespace Codesanook.EventManagement.Drivers {
                             part.Details,
                             (text, filter) => filter.ProcessContent(text, favor)
                         );
-
                         // EventDisplayViewModel must inherit from Shape
                         return shapeHelper.Parts_Event_Body_Summary(Html: new HtmlString(bodyText));
                     }
                 ),
                 ContentShape(
                     "Parts_Event",
-                    () => {
-                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event(typeof(EventDisplayViewModel));
-                        SetViewModelValuesFromPart(viewModel, part);
-                        return viewModel;
-                    }
+                    () => shapeHelper.Parts_Event(Event: part) 
                 ),
                 ContentShape(
                     "Parts_Event_Footer",
-                    () => {
-                        EventDisplayViewModel viewModel = shapeHelper.Parts_Event_Footer(typeof(EventDisplayViewModel));
-                        SetViewModelValuesFromPart(viewModel, part);
-                        return viewModel;
-                    }
+                    () => shapeHelper.Parts_Event_Footer(Event: part) 
                 )
             );
         }
@@ -101,17 +85,17 @@ namespace Codesanook.EventManagement.Drivers {
                 : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
         }
 
-        private static void SetViewModelValuesFromPart(EventDisplayViewModel viewModel, EventPart part) {
-            // We always get datetime value, we use null because of Orchard CMS
-            viewModel.EventId = part.Id;
-            viewModel.BeginDateTimeUtc = part.BeginDateTimeUtc.Value;
-            viewModel.EndDateTimeUtc = part.EndDateTimeUtc.Value;
+        //private static void SetViewModelValuesFromPart(EventDisplayViewModel viewModel, EventPart part) {
+        //    // We always get datetime value, we use null because of Orchard CMS
+        //    viewModel.EventId = part.Id;
+        //    viewModel.BeginDateTimeUtc = part.BeginDateTimeUtc.Value;
+        //    viewModel.EndDateTimeUtc = part.EndDateTimeUtc.Value;
 
-            viewModel.Location = part.Location;
-            viewModel.TicketPrice = part.TicketPrice;
-            // Todo calculate event
-            viewModel.AvailableTicketCount = 10;
-        }
+        //    viewModel.Location = part.Location;
+        //    viewModel.TicketPrice = part.TicketPrice;
+        //    // Todo calculate event
+        //    viewModel.AvailableTicketCount = 10;
+        //}
 
         // HTTP GET
         protected override DriverResult Editor(EventPart part, dynamic shapeHelper) {
