@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Amazon.S3;
+using Codesanook.Common.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
 using NHibernate.Util;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Users.Models;
 
@@ -18,15 +22,24 @@ namespace Codesanook.EventManagement.Controllers {
         private readonly ITransactionManager transactionManager;
         private readonly IContentManager contentManager;
         private readonly IAuthenticationService authenticationService;
+        private readonly dynamic shapeFactory;
+        private readonly ISiteService siteService;
+        private readonly IAmazonS3 s3Client;
 
         public EventBookingController(
             ITransactionManager transactionManager,
             IContentManager contentManager,
-            IAuthenticationService authenticationService
+            IAuthenticationService authenticationService,
+            IShapeFactory shapeFactory,
+            ISiteService siteService,
+            IAmazonS3 s3Client
         ) {
             this.transactionManager = transactionManager;
             this.contentManager = contentManager;
             this.authenticationService = authenticationService;
+            this.shapeFactory = shapeFactory;
+            this.siteService = siteService;
+            this.s3Client = s3Client;
         }
 
         // /event-booking 
@@ -45,13 +58,19 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         public ActionResult Details(int eventBookingId) {
-            var viewModel = GetEventBookingViewModel(eventBookingId);
-            return View(viewModel);
-        }
 
-        [HttpPost]
-        public ActionResult Details(FormCollection form) {
-            return View();
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
+
+            // Build display for event content item
+            var eventShape = contentManager.BuildDisplay(eventPart.ContentItem);
+
+            var viewModel = shapeFactory.ViewModel(
+                EventShape: eventShape
+            );
+            return View(viewModel);
         }
 
         public ActionResult Register(int eventId, int? eventBookingId, int? numberOfAttendees) {
@@ -137,6 +156,16 @@ namespace Codesanook.EventManagement.Controllers {
             // Sometimes you need to delete mapping cache
             var viewModel = GetEventBookingViewModel(eventBookingId);
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult InformPayment(int eventBookingId) {
+            // ToDo upload a file with Amazon S3 IAmazonS3
+            var setting = siteService.GetSiteSettings().As<CommonSettingPart>();
+            // setting.AwsAccessKey
+            // setting.AwsSecretKey
+            // s3Client.UploadObjectFromStreamAsync
+            return RedirectToAction(nameof(Details), new { eventBookingId });
         }
 
         private IList<EventAttendeeRecord> GetEventAttendees(int? eventBookingId, int? numberOfAttendees) {

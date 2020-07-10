@@ -1,6 +1,6 @@
 <Placement>
+    <!-- https://docs.orchardproject.net/en/latest/Documentation/Understanding-placement-info/ -->
     <!-- shape type -->
-
     <Match DisplayType="Detail">
         <Place Parts_Event_Body_Summary="Header:6"/>
     </Match>
@@ -9,4 +9,9 @@
     <Place Parts_Event="Content:1"/>
     <Place Parts_Event_Edit="Content:1"/>
     <Place Parts_UpcomingEvents="Content:1"/>
+
+    <!-- Hide event footer in /EventBooking/Details/* path -->
+    <Match Path="/EventBooking/Details/*">
+        <Place Parts_Event_Footer="-" />
+    </Match>
 </Placement>
