@@ -20,7 +20,9 @@ namespace Codesanook.EventManagement.Models {
         // Todo use enum but enum string 
         public virtual EventBookingStatus Status { get; set; }
         public virtual DateTime? PaidDateTimeUtc { get; set; }
-        public virtual string PaymentConfirmationAttachementFileUrl { get; set; }
+
+        // S3 File key
+        public virtual string PaymentConfirmationAttachementFileKey { get; set; }
 
         // Uni-directional mapping and get only
         public virtual IList<EventAttendeeRecord> EventAttendees => eventAttendees;

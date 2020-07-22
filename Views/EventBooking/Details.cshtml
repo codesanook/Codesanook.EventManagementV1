@@ -1,21 +1,61 @@
 ﻿@using Codesanook.EventManagement.ViewModels
 @using Codesanook.EventManagement.Models
 @using Codesanook.EventManagement.Controllers
+@using Codesanook.AmazonS3.Controllers
+
+@{
+    Script.Require("React").AtHead();
+    Script.Require("ReactDOM").AtHead();
+    Script.Include("codesanook-event-management.js").AtHead();
+    Style.Include("codesanook-event-management.css").AtHead();
+
+    var actionUrl = Url.Action(
+        nameof(EventBookingController.InformPayment),
+        "EventBooking",
+        new
+        {
+            area = "Codesanook.EventManagement",
+            eventBookingId = ViewContext.RouteData.Values["eventBookingId"]
+        }
+    );
+
+    var eventBooking = Model.EventBooking as EventBookingRecord;
+    var fileUrl = Url.Action(
+        nameof(FileController.GetFile),
+        "File",
+        new
+        {
+            area = "Codesanook.AmazonS3",
+            fileKey = eventBooking.PaymentConfirmationAttachementFileKey
+        }
+    );
+}
 
 <div class="alert alert-warning text-center">
     <strong>Status</strong> Waiting for payment
 </div>
 
+@Html.React(
+    "CodesanookEventManagement.PaymentConfirmationModal",
+    new { paymentConfirmationFileUrl = fileUrl }
+)
+
 <a class="btn btn-link mb-2 mr-10" href="@Url.Action(nameof(EventBookingController.Index))">
     < Back
 </a>
 
-@using (Html.BeginFormAntiForgeryPost(nameof(EventBookingController.InformPayment), FormMethod.Post))
+
+
+@using (Html.BeginFormAntiForgeryPost(
+    actionUrl,
+    FormMethod.Post,
+    new { enctype = "multipart/form-data" }
+))
 {
     <div class="form-row align-items-center justify-content-center">
         <div class="col-auto">
             <div class="custom-file mb-2">
-                <input type="file" class="custom-file-input" id="customFile">
+                <input type="file" class="custom-file-input" id="customFile" name="postedFile">
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
         </div>
@@ -25,6 +65,10 @@
     </div>
 }
 
+<img src="" alt="" class="img-thumbnail">
 
+@*
+    Reuse EventShape
+*@
 @Display(Model.EventShape)
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Codesanook.EventManagement.Models;
+using NHibernate.Mapping;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
@@ -131,7 +132,10 @@ namespace Codesanook.EventManagement {
 
                     .Column<DateTime>(nameof(EventBookingRecord.BookingDateTimeUtc))
                     .Column<DateTime>(nameof(EventBookingRecord.PaidDateTimeUtc))
-                    .Column<decimal>(nameof(EventBookingRecord.PaymentConfirmationAttachementFileUrl))
+                    .Column<string>(
+                        nameof(EventBookingRecord.PaymentConfirmationAttachementFileKey),
+                        column => column.WithLength(1024)
+                    )
             );
         }
 

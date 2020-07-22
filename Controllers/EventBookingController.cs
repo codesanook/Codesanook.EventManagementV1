@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 using Amazon.S3;
+using Amazon.S3.Model;
+using Codesanook.AmazonS3.Models;
 using Codesanook.Common.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
@@ -68,10 +74,50 @@ namespace Codesanook.EventManagement.Controllers {
             var eventShape = contentManager.BuildDisplay(eventPart.ContentItem);
 
             var viewModel = shapeFactory.ViewModel(
-                EventShape: eventShape
+                EventShape: eventShape,
+                EventBooking: eventBooking
             );
             return View(viewModel);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> InformPayment(
+            int eventBookingId,
+            HttpPostedFileBase postedFile
+        ) {
+
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
+
+            // ToDo upload a file with Amazon S3 IAmazonS3
+            var s3Setting = siteService.GetSiteSettings().As<AwsS3SettingPart>();
+
+            var dto = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero);
+            var timestamp =  dto.ToUnixTimeSeconds();
+            var fileExtension = Path.GetExtension(postedFile.FileName);
+            var fileKey =
+                $"payment-confirmation/event-id-{eventPart.Id}/booking-id-{eventBooking.Id}-{timestamp}{fileExtension}";
+
+            using (var stream = postedFile.InputStream) {
+                var request = new PutObjectRequest() {
+                    BucketName = s3Setting.AwsS3BucketName,
+                    Key = fileKey,
+                    InputStream = stream,
+                    CannedACL = S3CannedACL.Private,
+                    ContentType = postedFile.ContentType,
+                };
+
+                var response = await s3Client.PutObjectAsync(request);
+
+                eventBooking.PaymentConfirmationAttachementFileKey = $"{fileKey}";
+                eventBooking.Status = EventBookingStatus.Successful;
+            }
+
+            return RedirectToAction(nameof(Details), new { eventBookingId });
+        }
+
 
         public ActionResult Register(int eventId, int? eventBookingId, int? numberOfAttendees) {
             var eventAttendees = GetEventAttendees(
@@ -125,7 +171,7 @@ namespace Codesanook.EventManagement.Controllers {
                 eventBookingId = eventBooking.Id;
             }
 
-            // Because we set cascase all so the flow will be:  
+            // Because we set cascade all so the flow will be:  
             // Insert a new EventBookingRecord
             // Insert a new EventAttendeeRecord
             return RedirectToAction(
@@ -158,16 +204,6 @@ namespace Codesanook.EventManagement.Controllers {
             return View(viewModel);
         }
 
-        [HttpPost]
-        public ActionResult InformPayment(int eventBookingId) {
-            // ToDo upload a file with Amazon S3 IAmazonS3
-            var setting = siteService.GetSiteSettings().As<CommonSettingPart>();
-            // setting.AwsAccessKey
-            // setting.AwsSecretKey
-            // s3Client.UploadObjectFromStreamAsync
-            return RedirectToAction(nameof(Details), new { eventBookingId });
-        }
-
         private IList<EventAttendeeRecord> GetEventAttendees(int? eventBookingId, int? numberOfAttendees) {
             if (eventBookingId.HasValue) {
                 var session = transactionManager.GetSession();
@@ -197,7 +233,7 @@ namespace Codesanook.EventManagement.Controllers {
                 BookingDateTimeUtc = eventBooking.BookingDateTimeUtc,
                 Status = eventBooking.Status,
                 PaidDateTimeUtc = eventBooking.PaidDateTimeUtc,
-                PaymentConfirmationAttachementFileUrl = eventBooking.PaymentConfirmationAttachementFileUrl,
+                PaymentConfirmationAttachementFileUrl = eventBooking.PaymentConfirmationAttachementFileKey,
                 EventAttendees = eventBooking.EventAttendees
             };
 
