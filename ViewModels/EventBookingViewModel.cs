@@ -34,5 +34,6 @@ namespace Codesanook.EventManagement.ViewModels {
 
             return "";
         }
+
     }
 }

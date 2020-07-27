@@ -52,8 +52,11 @@ namespace Codesanook.EventManagement.Controllers {
         public ActionResult Index() {
             // Get all booking with status paid/unpaid 
             var session = transactionManager.GetSession();
+            var user = authenticationService.GetAuthenticatedUser();
+            var userRecord = user.As<UserPart>().Record;
             var eventBookings = session
                 .Query<EventBookingRecord>()
+                .Where(x => x.User == userRecord)
                 .ToList();
 
             List<EventBookingViewModel> viewModels = new List<EventBookingViewModel>();
@@ -95,7 +98,7 @@ namespace Codesanook.EventManagement.Controllers {
             var s3Setting = siteService.GetSiteSettings().As<AwsS3SettingPart>();
 
             var dto = new DateTimeOffset(DateTime.UtcNow, TimeSpan.Zero);
-            var timestamp =  dto.ToUnixTimeSeconds();
+            var timestamp = dto.ToUnixTimeSeconds();
             var fileExtension = Path.GetExtension(postedFile.FileName);
             var fileKey =
                 $"payment-confirmation/event-id-{eventPart.Id}/booking-id-{eventBooking.Id}-{timestamp}{fileExtension}";
@@ -112,7 +115,7 @@ namespace Codesanook.EventManagement.Controllers {
                 var response = await s3Client.PutObjectAsync(request);
 
                 eventBooking.PaymentConfirmationAttachementFileKey = $"{fileKey}";
-                eventBooking.Status = EventBookingStatus.Successful;
+                eventBooking.Status = EventBookingStatus.Verifying;
             }
 
             return RedirectToAction(nameof(Details), new { eventBookingId });

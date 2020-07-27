@@ -29,43 +29,91 @@
             fileKey = eventBooking.PaymentConfirmationAttachementFileKey
         }
     );
+
+    var className = "light";
+    var isControlUploadFile = true;
+    var isShowFileModal = true;
+
+    switch (eventBooking.Status)
+    {
+        case EventBookingStatus.Uncomfirmed:
+            className = "light";
+            isControlUploadFile = false;
+            isShowFileModal = false;
+            break;
+
+        case EventBookingStatus.Comfirmed:
+            className = "primary";
+            isShowFileModal = false;
+            break;
+
+        case EventBookingStatus.Verifying:
+            className = "info";
+            isControlUploadFile = false;
+            break;
+
+        case EventBookingStatus.Successful:
+            className = "success";
+            isControlUploadFile = false;
+            break;
+
+        case EventBookingStatus.InvalidPayment:
+            className = "warning";
+            isControlUploadFile = false;
+            isShowFileModal = false;
+            break;
+
+        case EventBookingStatus.Cancelled:
+            className = "danger";
+            isControlUploadFile = false;
+            isShowFileModal = false;
+            break;
+
+        case EventBookingStatus.Refunded:
+            className = "secondary";
+            isControlUploadFile = false;
+            isShowFileModal = false;
+            break;
+    }
 }
 
-<div class="alert alert-warning text-center">
-    <strong>Status</strong> Waiting for payment
+<div class="alert alert-@className text-center">
+    <strong>Status</strong> @eventBooking.Status.ToString()
 </div>
 
-@Html.React(
-    "CodesanookEventManagement.PaymentConfirmationModal",
-    new { paymentConfirmationFileUrl = fileUrl }
-)
+@if (isShowFileModal)
+{
+    @Html.React(
+            "CodesanookEventManagement.PaymentConfirmationModal",
+            new { paymentConfirmationFileUrl = fileUrl }
+        )
+}
 
 <a class="btn btn-link mb-2 mr-10" href="@Url.Action(nameof(EventBookingController.Index))">
     < Back
 </a>
 
-
-
-@using (Html.BeginFormAntiForgeryPost(
-    actionUrl,
-    FormMethod.Post,
-    new { enctype = "multipart/form-data" }
-))
+@if (isControlUploadFile)
 {
-    <div class="form-row align-items-center justify-content-center">
-        <div class="col-auto">
-            <div class="custom-file mb-2">
-                <input type="file" class="custom-file-input" id="customFile" name="postedFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+    using (Html.BeginFormAntiForgeryPost(
+            actionUrl,
+            FormMethod.Post,
+            new { enctype = "multipart/form-data" }
+        ))
+    {
+        <div class="form-row align-items-center justify-content-center">
+            <div class="col-auto">
+                <div class="custom-file mb-2">
+                    <input type="file" class="custom-file-input" id="customFile" name="postedFile">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Upload slip</button>
             </div>
         </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-2">Upload slip</button>
-        </div>
-    </div>
+    }
 }
-
-<img src="" alt="" class="img-thumbnail">
 
 @*
     Reuse EventShape
