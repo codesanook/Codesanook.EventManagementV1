@@ -42,7 +42,7 @@
             isShowFileModal = false;
             break;
 
-        case EventBookingStatus.Comfirmed:
+        case EventBookingStatus.WatingForPayment:
             className = "primary";
             isShowFileModal = false;
             break;
@@ -78,6 +78,7 @@
 }
 
 <div class="alert alert-@className text-center">
+    @*TO DO solve label with localization*@
     <strong>Status</strong> @eventBooking.Status.ToString()
 </div>
 

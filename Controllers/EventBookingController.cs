@@ -4,12 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.ModelBinding;
 using System.Web.Mvc;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Codesanook.AmazonS3.Models;
-using Codesanook.Common.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
 using NHibernate.Linq;
@@ -192,11 +190,10 @@ namespace Codesanook.EventManagement.Controllers {
         public ActionResult RegisterConfirm(int eventBookingId, FormCollection form) {
             var session = transactionManager.GetSession();
             var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
-            eventBooking.Status = EventBookingStatus.Comfirmed;
+            eventBooking.Status = EventBookingStatus.WatingForPayment;
             eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
 
-            // Todo send event booking confirmation email to a user 
-
+            // TO DO send event booking confirmation email to a user 
             // We don't need to call update for connected object xxx session.Update(eventBooking);
             return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
         }
