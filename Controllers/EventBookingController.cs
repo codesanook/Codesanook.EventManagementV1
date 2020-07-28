@@ -10,6 +10,7 @@ using Amazon.S3.Model;
 using Codesanook.AmazonS3.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
+using Codesanook.BasicUserProfile.Models;
 using NHibernate.Linq;
 using NHibernate.Util;
 using Orchard.ContentManagement;
@@ -218,6 +219,7 @@ namespace Codesanook.EventManagement.Controllers {
                 typeof(ConfirmedBookingViewModel)
             );
             template.Event = eventPart;
+            template.UserProfile = user.As<UserProfilePart>();
 
             // Render a shape
             var bodyHtml = shapeDisplay.Display(template);
