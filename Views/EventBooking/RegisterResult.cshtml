@@ -10,18 +10,17 @@
         </p>
         <p>
             <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span>@(Model.Event.BeginDateTimeUtc.HasValue ? Model.Event.BeginDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>@Model.Event.StartDateTimeUtc.Value.ToString("HH:mm")</span>
             <span>-</span>
-            <span>@(Model.Event.EndDateTimeUtc.HasValue ? Model.Event.EndDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>@Model.Event.FinishDateTimeUtc.Value.ToString("HH:mm")</span>
             <span>(GMT+7)</span>
         </p>
         <p><i class="fa fa-map-pin main-color mr-2"></i> @Model.Event.Location</p>
         <div class="text-center mt-5 mb-5">
             <h4>Thank you for register.</h4>
-            <h6 class="mt-4">ท่านสามารถโอนเงินได้ที่</h6>
-            <div>ธนาคารไทยพาณิชย์ สาขาบางรัก</div>
-            <div class="mt-1"><strong>ชื่อบัญชี</strong> นายทีละนิด จิตแจ่มใส</div>
-            <div class="mt-1"><strong>เลขที่บัญชี</strong> 999-9-999999-9</div>
+
+            @* Render PaymentInformation shape which is PaymentInformation.cshtml *@
+            @Display(New.PaymentInformation())
         </div>
     </div>
 </div>

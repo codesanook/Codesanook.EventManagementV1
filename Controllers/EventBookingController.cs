@@ -15,6 +15,9 @@ using NHibernate.Util;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Email.Services;
+using Orchard.Localization;
+using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -29,6 +32,10 @@ namespace Codesanook.EventManagement.Controllers {
         private readonly dynamic shapeFactory;
         private readonly ISiteService siteService;
         private readonly IAmazonS3 s3Client;
+        private readonly IShapeDisplay shapeDisplay;
+        private readonly IMessageService messageService;
+
+        public Localizer T { get; set; }
 
         public EventBookingController(
             ITransactionManager transactionManager,
@@ -36,7 +43,9 @@ namespace Codesanook.EventManagement.Controllers {
             IAuthenticationService authenticationService,
             IShapeFactory shapeFactory,
             ISiteService siteService,
-            IAmazonS3 s3Client
+            IAmazonS3 s3Client,
+            IShapeDisplay shapeDisplay,
+            IMessageService messageService
         ) {
             this.transactionManager = transactionManager;
             this.contentManager = contentManager;
@@ -44,6 +53,9 @@ namespace Codesanook.EventManagement.Controllers {
             this.shapeFactory = shapeFactory;
             this.siteService = siteService;
             this.s3Client = s3Client;
+            this.shapeDisplay = shapeDisplay;
+            this.messageService = messageService;
+            T = NullLocalizer.Instance;
         }
 
         // /event-booking 
@@ -193,9 +205,35 @@ namespace Codesanook.EventManagement.Controllers {
             eventBooking.Status = EventBookingStatus.WatingForPayment;
             eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
 
-            // TO DO send event booking confirmation email to a user 
-            // We don't need to call update for connected object xxx session.Update(eventBooking);
             return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
+        }
+
+        private void SendConfirmedBookingEmail(EventBookingRecord eventBooking) {
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var user = authenticationService.GetAuthenticatedUser();
+
+            // Send an email
+            // !!! Folder lookup works only "Parts" folder !!!
+            ConfirmedBookingViewModel template = shapeFactory.Email_Template_ConfirmedBooking(
+                typeof(ConfirmedBookingViewModel)
+            );
+            template.Event = eventPart;
+
+            // Render a shape
+            var bodyHtml = shapeDisplay.Display(template);
+            var parameters = new Dictionary<string, object>
+            {
+                { "Subject", T("Booking confirmed").Text },
+                { "Body", bodyHtml }, // Already transformed to HTML with shapeDisplay.Display
+                { "Recipients",  user.Email } // CSV for multiple emails
+            };
+
+            // The underlying class is SmtpMessageChannel
+            // It handles exception internally and not throw up to a caller.
+            messageService.Send(
+                DefaultEmailMessageChannelSelector.ChannelName,
+                parameters
+            );
         }
 
         public ActionResult RegisterResult(int eventBookingId) {

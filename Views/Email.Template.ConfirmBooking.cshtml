@@ -1,0 +1,41 @@
+﻿
+@using Codesanook.EventManagement.ViewModels
+@model ConfirmedBookingViewModel
+
+<p>
+    Dear FirstName LastName
+</p>
+
+<p>
+    Thanks for booking an event with us.
+</p>
+<p>
+    Only one step to finish a booking.
+    Please transfer money with payment information in this email
+    and upload a payment slip in manage booking page.
+</p>
+
+<h4>
+    Your event information
+</h4>
+<ul>
+    <li>Event name: </li>
+    <li>Start: </li>
+    <li>Finish: </li>
+    <li>Location: </li>
+</ul>
+
+<h4>Payment information:</h4>
+<p>
+    @* Render PaymentInformation shape which is PaymentInformation.cshtml *@
+    @Display(New.PaymentInformation())
+</p>
+
+<p>
+    Thanks,
+</p>
+
+<p>
+   company name Team
+</p>
+

@@ -37,12 +37,12 @@ namespace Codesanook.EventManagement.Models {
 
         public DateTime? PublishedUtc => this.As<ICommonPart>().PublishedUtc;
 
-        public DateTime? BeginDateTimeUtc {
+        public DateTime? StartDateTimeUtc {
             get => Record.StartDateTimeUtc;
             set => Record.StartDateTimeUtc = value;
         }
 
-        public DateTime? EndDateTimeUtc {
+        public DateTime? FinishDateTimeUtc {
             get => Record.FinishDateTimeUtc;
             set => Record.FinishDateTimeUtc = value;
         }
@@ -65,23 +65,23 @@ namespace Codesanook.EventManagement.Models {
         public string GetFormattedSchedule() {
             const string dateFormat = "d MMM yyyy";
             // 1 May 2020, same day
-            if (BeginDateTimeUtc.Value.Date == EndDateTimeUtc.Value.Date) {
-                return BeginDateTimeUtc.Value.ToString(dateFormat);
+            if (StartDateTimeUtc.Value.Date == FinishDateTimeUtc.Value.Date) {
+                return StartDateTimeUtc.Value.ToString(dateFormat);
             }
 
             // 1 - 10 May 2020
-            if ((BeginDateTimeUtc.Value.Month == EndDateTimeUtc.Value.Month)
-                && (BeginDateTimeUtc.Value.Year == EndDateTimeUtc.Value.Year)) {
-                return BeginDateTimeUtc.Value.Day.ToString() + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+            if ((StartDateTimeUtc.Value.Month == FinishDateTimeUtc.Value.Month)
+                && (StartDateTimeUtc.Value.Year == FinishDateTimeUtc.Value.Year)) {
+                return StartDateTimeUtc.Value.Day.ToString() + " - " + FinishDateTimeUtc.Value.ToString(dateFormat);
             }
 
             // 1 May - 10 June 2020
-            if (BeginDateTimeUtc.Value.Year == EndDateTimeUtc.Value.Year) {
-                return BeginDateTimeUtc.Value.ToString("d MMM") + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+            if (StartDateTimeUtc.Value.Year == FinishDateTimeUtc.Value.Year) {
+                return StartDateTimeUtc.Value.ToString("d MMM") + " - " + FinishDateTimeUtc.Value.ToString(dateFormat);
             }
 
             // 1 May 2020 - 1 May 2021
-            return BeginDateTimeUtc.Value.ToString(dateFormat) + " - " + EndDateTimeUtc.Value.ToString(dateFormat);
+            return StartDateTimeUtc.Value.ToString(dateFormat) + " - " + FinishDateTimeUtc.Value.ToString(dateFormat);
         }
 
     }

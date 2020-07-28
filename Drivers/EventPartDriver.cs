@@ -120,13 +120,13 @@ namespace Codesanook.EventManagement.Drivers {
                     viewModel.BeginDateEditor.Date,
                     viewModel.BeginTimeEditor.Time
                 );
-                part.BeginDateTimeUtc = beginDateTimeUtc;
+                part.StartDateTimeUtc = beginDateTimeUtc;
 
                 var endDateTimeUtc = dateLocalizationServices.ConvertFromLocalizedString(
                     viewModel.EndDateEditor.Date,
                     viewModel.EndTimeEditor.Time
                 );
-                part.EndDateTimeUtc = endDateTimeUtc;
+                part.FinishDateTimeUtc = endDateTimeUtc;
 
                 orchardServices.Notifier.Success(T("Event part saved"));
                 return Editor(part, shapeHelper);
@@ -167,27 +167,27 @@ namespace Codesanook.EventManagement.Drivers {
                 BeginDateEditor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = false,
-                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.BeginDateTimeUtc),
-                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.BeginDateTimeUtc),
+                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.StartDateTimeUtc),
+                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.StartDateTimeUtc),
                 },
                 EndDateEditor = new DateTimeEditor() {
                     ShowDate = true,
                     ShowTime = false,
-                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.EndDateTimeUtc),
-                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.EndDateTimeUtc),
+                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.FinishDateTimeUtc),
+                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.FinishDateTimeUtc),
                 },
 
                 BeginTimeEditor = new DateTimeEditor() {
                     ShowDate = false,
                     ShowTime = true,
-                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.BeginDateTimeUtc),
-                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.BeginDateTimeUtc),
+                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.StartDateTimeUtc),
+                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.StartDateTimeUtc),
                 },
                 EndTimeEditor = new DateTimeEditor() {
                     ShowDate = false,
                     ShowTime = true,
-                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.EndDateTimeUtc),
-                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.EndDateTimeUtc),
+                    Date = dateLocalizationServices.ConvertToLocalizedDateString(part.FinishDateTimeUtc),
+                    Time = dateLocalizationServices.ConvertToLocalizedTimeString(part.FinishDateTimeUtc),
                 },
 
                 Location = part.Location,

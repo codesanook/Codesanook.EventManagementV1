@@ -151,6 +151,7 @@
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="ShellEvent.cs" />
+    <Compile Include="ViewModels\ConfirmedBookingViewModel.cs" />
     <Compile Include="ViewModels\EventBookingRegisterViewModel.cs" />
     <Compile Include="ViewModels\EventBookingViewModel.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
@@ -190,6 +191,10 @@
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
       <Name>Orchard.Autoroute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Email\Orchard.Email.csproj">
+      <Project>{05660F47-D649-48BD-9DED-DF4E01E7CFF9}</Project>
+      <Name>Orchard.Email</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531E894-D259-45A3-AA61-26DBE720C1CE}</Project>
@@ -260,6 +265,12 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\AWSSDK.S3.3.3.18.3\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.ConfirmBooking.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PaymentInformation.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

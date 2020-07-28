@@ -12,9 +12,9 @@
         </p>
         <p>
             <i class="fa fa-clock-o" aria-hidden="true"></i>
-            <span>@(Model.Event.BeginDateTimeUtc.HasValue ? Model.Event.BeginDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>@(Model.Event.StartDateTimeUtc.HasValue ? Model.Event.StartDateTimeUtc.Value.ToString("HH:mm") : "")</span>
             <span>-</span>
-            <span>@(Model.Event.EndDateTimeUtc.HasValue ? Model.Event.EndDateTimeUtc.Value.ToString("HH:mm") : "")</span>
+            <span>@(Model.Event.FinishDateTimeUtc.HasValue ? Model.Event.FinishDateTimeUtc.Value.ToString("HH:mm") : "")</span>
             <span>(GMT+7)</span>
         </p>
         <p><i class="fa fa-map-pin main-color mr-2"></i> @Model.Event.Location</p>
