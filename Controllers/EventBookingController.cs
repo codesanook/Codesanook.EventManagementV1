@@ -64,17 +64,22 @@ namespace Codesanook.EventManagement.Controllers {
             // Get all booking with status paid/unpaid 
             var session = transactionManager.GetSession();
             var user = authenticationService.GetAuthenticatedUser();
-            var userRecord = user.As<UserPart>().Record;
-            var eventBookings = session
-                .Query<EventBookingRecord>()
-                .Where(x => x.User == userRecord)
-                .ToList();
+            if (user != null) {
+                var userRecord = user.As<UserPart>().Record;
+                var eventBookings = session
+                    .Query<EventBookingRecord>()
+                    .Where(x => x.User == userRecord)
+                    .ToList();
 
-            List<EventBookingViewModel> viewModels = new List<EventBookingViewModel>();
-            foreach (var eb in eventBookings) {
-                viewModels.Add(GetEventBookingViewModel(eb.Id)); ;
+                List<EventBookingViewModel> viewModels = new List<EventBookingViewModel>();
+                foreach (var eb in eventBookings) {
+                    viewModels.Add(GetEventBookingViewModel(eb.Id)); ;
+                }
+                return View(viewModels);
             }
-            return View(viewModels);
+            else {
+                return Redirect("~/Users/Account/AccessDenied?ReturnUrl=%2FEventBooking%2F");
+            }
         }
 
         public ActionResult Details(int eventBookingId) {
@@ -138,13 +143,18 @@ namespace Codesanook.EventManagement.Controllers {
                 eventBookingId,
                 numberOfAttendees
             );
-
-            var eventPart = contentManager.Get<EventPart>(eventId);
-            var viewModel = new EventBookingRegisterViewModel() {
-                Event = eventPart,
-                EventAttendees = eventAttendees
-            };
-            return View(viewModel);
+            var user = authenticationService.GetAuthenticatedUser();
+            if (user != null) {
+                var eventPart = contentManager.Get<EventPart>(eventId);
+                var viewModel = new EventBookingRegisterViewModel() {
+                    Event = eventPart,
+                    EventAttendees = eventAttendees
+                };
+                return View(viewModel);
+            }
+            else {
+                return Redirect("~/Users/Account/AccessDenied?ReturnUrl="+ Request.Url.ToString());
+            }
         }
 
         [HttpPost]

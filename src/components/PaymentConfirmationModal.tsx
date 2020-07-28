@@ -1,30 +1,28 @@
 // or less ideally
-import {Button, Modal} from 'react-bootstrap';
-import React, {useState} from 'react';
+import { Button, Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
 
 
 interface IProps {
-    paymentConfirmationFileUrl: string; 
+    paymentConfirmationFileUrl: string;
 }
 
-const PaymentConfirmationModal = ({paymentConfirmationFileUrl}): IProps => {
+const PaymentConfirmationModal = ({ paymentConfirmationFileUrl }): IProps => {
 
-  const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-  return (
+    return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Show payment confirmation file 
+                Show payment confirmation file
             </Button>
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        <div className="text-center">
-                            Payment confirmation file
-                        </div>
+                    <Modal.Title className="mx-auto pl-5">
+                        Payment confirmation file
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -37,7 +35,7 @@ const PaymentConfirmationModal = ({paymentConfirmationFileUrl}): IProps => {
                 </Modal.Footer>
             </Modal>
         </>
-        
+
     );
 
 };

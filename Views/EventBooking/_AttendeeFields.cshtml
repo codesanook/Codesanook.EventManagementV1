@@ -7,42 +7,59 @@
         <legend> Attendee @(index + 1) </legend>
         <div class="row">
             <div class="col-12 col-md-6">
-                @Html.TextBoxFor(m => m[index].FirstName, new
-               {
-                   placeholder = T(Html.DisplayNameFor(m => m[index].FirstName).ToString())
-               })
-                @Html.ValidationMessageFor(m => m[index].FirstName)
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m[index].FirstName, new
+                   {
+                       placeholder = T(Html.DisplayNameFor(m => m[index].FirstName).ToString()),
+                       @class = "form-control"
+                   })
+                    @Html.ValidationMessageFor(m => m[index].FirstName)
+                </div>
+
             </div>
             <div class="col-12 col-md-6">
-                @Html.TextBoxFor(m => m[index].LastName, new
-               {
-                   placeholder = T(Html.DisplayNameFor(m => m[index].LastName).ToString())
-               })
-                @Html.ValidationMessageFor(m => m[index].LastName)
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m[index].LastName, new
+                   {
+                       placeholder = T(Html.DisplayNameFor(m => m[index].LastName).ToString()),
+                       @class = "form-control"
+                   })
+                    @Html.ValidationMessageFor(m => m[index].LastName)
+                </div>
             </div>
         </div>
-        <div>
-            @Html.TextBoxFor(m => m[index].Email, new
-           {
-               @type = "email",
-               placeholder = T(Html.DisplayNameFor(m => m[index].Email).ToString())
-           })
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m[index].Email, new
+                   {
+                       @type = "email",
+                       placeholder = T(Html.DisplayNameFor(m => m[index].Email).ToString()),
+                       @class = "form-control"
+                   })
+                    @Html.ValidationMessageFor(m => m[index].Email)
+                </div>
+                <div class="form-group">
+                    @Html.EditorFor(
+                       m => m[index].MobilePhoneNumber,
+                       new
+                       {
+                           @class = "form-control",
+                           FieldName = Html.NameFor(m => m[index].MobilePhoneNumber)
+                       }
+                    )
+                    @Html.ValidationMessageFor(m => m[index].MobilePhoneNumber)
+                </div>
+                <div class="form-group">
+                    @Html.TextBoxFor(m => m[index].OrganizationName, new
+                   {
+                       placeholder = T(Html.DisplayNameFor(m => m[index].OrganizationName).ToString()),
+                       @class = "form-control"
+                   })
+                    @Html.ValidationMessageFor(m => m[index].OrganizationName)
+                </div>
+            </div>
         </div>
-        <div>
-            @Html.EditorFor(
-               m => m[index].MobilePhoneNumber,
-               new { FieldName = Html.NameFor(m => m[index].MobilePhoneNumber) }
-           )
-            @Html.ValidationMessageFor(m => m[index].MobilePhoneNumber)
-        </div>
-        <div>
-            @Html.TextBoxFor(m => m[index].OrganizationName, new
-           {
-               placeholder = T(Html.DisplayNameFor(m => m[index].OrganizationName).ToString())
-           })
-            @Html.ValidationMessageFor(m => m[index].OrganizationName)
-        </div>
-
         @Html.HiddenFor(m => m[index].Id)
     </fieldset>
 }
