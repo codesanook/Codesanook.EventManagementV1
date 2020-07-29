@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Codesanook.EventManagement.Models {
@@ -22,12 +23,14 @@ namespace Codesanook.EventManagement.Models {
 
         [DisplayName("Mobile phone number")]
         [Required]
-        //[UIHint("PhoneNumber")]
         [DataType(DataType.PhoneNumber)]
         public virtual string MobilePhoneNumber { get; set; }
 
         [DisplayName("Organization name")]
         [Required]
         public virtual string OrganizationName { get; set; }
+
+        private class ClassNameAttribute : Attribute {
+        }
     }
 }
