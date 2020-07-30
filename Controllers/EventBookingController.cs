@@ -131,7 +131,7 @@ namespace Codesanook.EventManagement.Controllers {
                 var response = await s3Client.PutObjectAsync(request);
 
                 eventBooking.PaymentConfirmationAttachementFileKey = $"{fileKey}";
-                eventBooking.Status = EventBookingStatus.Verifying;
+                eventBooking.Status = EventBookingStatus.VerifyingPayment;
             }
 
             return RedirectToAction(nameof(Details), new { eventBookingId });

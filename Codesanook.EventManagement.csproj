@@ -271,10 +271,19 @@
     <Analyzer Include="..\..\..\packages\AWSSDK.S3.3.3.18.3\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Email.Template.ConfirmBooking.cshtml" />
+    <Content Include="Views\Email.Template.ConfirmedBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PaymentInformation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.ConfirmedPayment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.SuccessfulBooking.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.FailedBooking.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

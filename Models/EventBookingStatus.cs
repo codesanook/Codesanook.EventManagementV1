@@ -11,10 +11,10 @@
     public enum EventBookingStatus {
         Uncomfirmed, // A user hasn't click confirm.
         WatingForPayment, // Waiting for the payment after click confirm.
+        VerifyingPayment, // After a user upload a slip.
 
-        Verifying, // After a user upload a slip.
         Successful, // A user's already paid a successful booking == verified == success
-        InvalidPayment, // Payment is not successful.  
+        InvalidPayment, // Payment is invalid
 
         Cancelled, // A user does not finish booking and cancels a booking.
         Refunded // A user has successful booking but cancels to get money back.
