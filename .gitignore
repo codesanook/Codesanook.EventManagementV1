@@ -349,6 +349,16 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Ignore generated JavaScript and StyleSheet file
-Scripts/**/*.js
-Styles/**/*.css
+# Ignore folder and add back for a specific files
+# https://stackoverflow.com/a/18702826/1872200
+Scripts/**/*
+Styles/**/*
+
+# Add menu style back
+!/Styles/menu.event-admin.css
+!/Styles/menu.bank-account-admin.css
+
+# Never ignore Web.config in Scripts and Styles folder
+!/Scripts/Web.config
+!/Styles/Web.config
+

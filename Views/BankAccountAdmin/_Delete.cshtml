@@ -1,0 +1,16 @@
+﻿@using Codesanook.EventManagement.Models;
+@using Codesanook.EventManagement.Controllers;
+@model BankAccountRecord
+@{
+    Layout.Title = T("Delete bank account").ToString();
+}
+
+<p>Are you sure you want to delete this bank account
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <fieldset>
+        <a href="@Url.Action(nameof(BankAccountAdminController.Index))" class="primaryAction">Back</a>
+        <button class="primaryAction" type="submit">Create</button>
+    </fieldset>
+}

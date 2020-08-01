@@ -1,5 +1,5 @@
 ﻿@using Codesanook.EventManagement.ViewModels
-@model EventBookingViewModel
+@model EventBookingResultViewModel
 <h1 class="text-center">@Html.TitleForPage(T("Registration result").ToString())</h1>
 <div class="row">
     <div class="col-12 offset-md-3 col-md-6">
@@ -18,9 +18,12 @@
         <p><i class="fa fa-map-pin main-color mr-2"></i> @Model.Event.Location</p>
         <div class="text-center mt-5 mb-5">
             <h4>Thank you for register.</h4>
-
-            @* Render PaymentInformation shape which is PaymentInformation.cshtml *@
-            @Display(New.PaymentInformation())
+            <h6 class="mt-4">ท่านสามารถโอนเงินได้ที่</h6>
+            @* Render BankAccount shape which is PaymentInformation.cshtml *@
+            @foreach (var account in Model.BankAccounts)
+            {
+                @Display(New.BankAccount(BankAccount: account))
+            }
         </div>
     </div>
 </div>

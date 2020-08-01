@@ -1,0 +1,14 @@
+﻿@using Codesanook.EventManagement.Models;
+@model BankAccountViewModel
+@{
+    Layout.Title = T("Edit bank account").ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    @Html.Partial("_BankAccountForm", Model);
+
+    <fieldset>
+        <button class="primaryAction" type="submit">Save</button>
+    </fieldset>
+}

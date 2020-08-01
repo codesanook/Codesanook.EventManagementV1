@@ -1,0 +1,7 @@
+﻿@using Codesanook.EventManagement.Models 
+@{
+    var account = Model.BankAccount as BankAccountRecord;
+}
+<div>ธนาคาร @account.BankName สาขา @account.BranchName</div>
+<div class="mt-1"><strong>ชื่อบัญชี</strong> @account.AccountName</div>
+<div class="mt-1"><strong>เลขที่บัญชี</strong> @account.AccountNumber</div>

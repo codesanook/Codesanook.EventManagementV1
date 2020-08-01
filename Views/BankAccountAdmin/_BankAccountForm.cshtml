@@ -1,0 +1,31 @@
+﻿@using Codesanook.EventManagement.Models;
+@model BankAccountViewModel
+
+<fieldset>
+        @Html.ValidationSummary()
+    <div>
+        <label for="@Html.IdFor(m => m.BankName)">@T(Html.DisplayNameFor(m => m.BankName).ToString())</label>
+        @Html.TextBoxFor(m => m.BankName, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.BankName)
+    </div>
+
+    <div>
+        <label for="@Html.IdFor(m => m.BranchName)">@T(Html.DisplayNameFor(m => m.BranchName).ToString())</label>
+        @Html.TextBoxFor(m => m.BranchName, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.BranchName)
+    </div>
+
+
+    <div>
+        <label for="@Html.IdFor(m => m.AccountName)">@T(Html.DisplayNameFor(m => m.AccountName).ToString())</label>
+        @Html.TextBoxFor(m => m.AccountName, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.AccountName)
+    </div>
+
+
+    <div>
+        <label for="@Html.IdFor(m => m.AccountNumber)">@T(Html.DisplayNameFor(m => m.AccountNumber).ToString())</label>
+        @Html.TextBoxFor(m => m.AccountNumber, new { @class = "text medium" })
+        @Html.ValidationMessageFor(m => m.AccountNumber)
+    </div>
+</fieldset>

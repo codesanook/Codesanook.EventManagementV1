@@ -153,7 +153,7 @@ namespace Codesanook.EventManagement.Controllers {
                 return View(viewModel);
             }
             else {
-                return Redirect("~/Users/Account/AccessDenied?ReturnUrl="+ Request.Url.ToString());
+                return Redirect("~/Users/Account/AccessDenied?ReturnUrl=" + Request.Url.ToString());
             }
         }
 
@@ -249,8 +249,15 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         public ActionResult RegisterResult(int eventBookingId) {
-            // Sometimes you need to delete mapping cache
-            var viewModel = GetEventBookingViewModel(eventBookingId);
+            var session = transactionManager.GetSession();
+            var eventbooking = session.Get<EventBookingRecord>(eventBookingId);
+            var eventPart = contentManager.Get<EventPart>(eventbooking.Event.Id);
+            var accounts = session.Query<BankAccountRecord>().ToList();
+
+            var viewModel = new EventBookingResultViewModel() {
+                Event = eventPart,
+                BankAccounts = accounts
+            };
             return View(viewModel);
         }
 

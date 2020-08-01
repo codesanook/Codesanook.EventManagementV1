@@ -1,0 +1,56 @@
+@using Codesanook.EventManagement.Controllers
+@{
+    Layout.Title = T("Bank account").ToString();
+}
+
+<div class="manage">
+    @Html.ActionLink(
+        T("Add a new account").ToString(),
+        "Create",
+        null,
+        new { @class = "button primaryAction" }
+    )
+</div>
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <fieldset>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col">@T("Bank account")</th>
+                    <th scope="col">@T("Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in Model.BankAccounts)
+                {
+                    <tr>
+                        <td>
+                            @Display(New.BankAccount(BankAccount: account))
+                        </td>
+                        <td>
+                            <ul class="action-links">
+                                <li class="action-link">
+                                    @Html.ActionLink(
+                    T(nameof(BankAccountAdminController.Edit)).ToString(),
+                    "Edit",
+                    new { account.Id }
+                )
+                                </li>
+                                <li class="action-link">
+                                    @Html.ActionLink(
+                    T(nameof(BankAccountAdminController.Delete)).ToString(),
+                    "Delete",
+                    new { account.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }
+                )
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Display(Model.Pager)
+    </fieldset>
+}

@@ -47,10 +47,7 @@ namespace Codesanook.EventManagement.Controllers {
             ).ToArray();
 
             var eventShapes = events.Select(
-                e => contentManager.BuildDisplay(
-                    e,
-                    "SummaryAdmin"
-                    )
+                e => contentManager.BuildDisplay(content: e, displayType: "SummaryAdmin")
             ).ToArray();
 
             var listShape = shapeFactory.List();
@@ -58,12 +55,12 @@ namespace Codesanook.EventManagement.Controllers {
 
             var totalItemCount = eventService.GetEventsCount(VersionOptions.Latest);
             var pagerShape = shapeFactory.Pager(pager).TotalItemCount(totalItemCount);
-
+            // We use ViewModel for naming convention but it can be whatever name.
+            // It can cause issue only when we call Display on the model because it is required a ViewModel.cshtml file
             var viewModel = shapeFactory
                 .ViewModel()
                 .ContentItems(listShape)
                 .Pager(pagerShape);
-
             return View(viewModel);
         }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Codesanook.EventManagement.Models;
 using Orchard.Users.Models;
 
@@ -16,9 +14,7 @@ namespace Codesanook.EventManagement.ViewModels {
         public DateTime? PaidDateTimeUtc { get; set; }
         public string PaymentConfirmationAttachementFileUrl { get; set; }
         public IList<EventAttendeeRecord> EventAttendees { get; set; }
-        public decimal GetTotalPrice() {
-            return Math.Round(EventAttendees.Count * Event.TicketPrice,2);
-        }
+        public decimal TotalPrice => Math.Round(EventAttendees.Count * Event.TicketPrice, 2);
 
         public string GetTextFromNow() {
 

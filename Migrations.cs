@@ -115,10 +115,14 @@ namespace Codesanook.EventManagement {
                     .AsWidgetWithIdentity() // in Orchard.Widget assembly
             );
 
-
             CreateEventBookingRecordTable();
             CreateEventAttendeeRecordTable();
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            CreateBankAccountRecordTable();
+            return 2;
         }
 
         private void CreateEventBookingRecordTable() {
@@ -153,6 +157,19 @@ namespace Codesanook.EventManagement {
                     .Column<int>("EventBookingId", column => column.NotNull())
             );
         }
+
+        private void CreateBankAccountRecordTable() {
+            SchemaBuilder.CreateTable(
+                nameof(BankAccountRecord),
+                table => table
+                    .Column<int>(nameof(BankAccountRecord.Id), column => column.PrimaryKey().Identity())
+                    .Column<string>(nameof(BankAccountRecord.BankName), column => column.NotNull().WithLength(128))
+                    .Column<string>(nameof(BankAccountRecord.BranchName), column => column.NotNull().WithLength(128))
+                    .Column<string>(nameof(BankAccountRecord.AccountName), column => column.NotNull().WithLength(256))
+                    .Column<string>(nameof(BankAccountRecord.AccountNumber), column => column.NotNull().WithLength(10))
+            );
+        }
+
 
         private void CreateProjectionItemForEventPart() {
             /// New The content item is not yet persisted!

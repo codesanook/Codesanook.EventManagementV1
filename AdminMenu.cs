@@ -1,14 +1,12 @@
-﻿using System.Linq;
+﻿using Codesanook.EventManagement.Controllers;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 
 namespace Codesanook.EventManagement {
+    // Document https://docs.orchardproject.net/en/latest/Documentation/Adding-admin-menu-items/
     public class AdminMenu : INavigationProvider {
-
         private readonly IContentManager contentManager;
 
         public AdminMenu(IContentManager contentManager) {
@@ -21,15 +19,31 @@ namespace Codesanook.EventManagement {
         // For admin menu
         public string MenuName => "admin";
 
+        // Create parent menu
         public void GetNavigation(NavigationBuilder builder) {
             builder
-                .AddImageSet("calendar")
-                .Add(T("Event"), "1.5", BuildChildMenu);
+                // Include menu.event-admin.css
+                .AddImageSet("event")
+                .Add(T("Event"), "1.5", BuildChildMenuItems);
+
+            builder
+                // only 1 level menu
+                .Add(item => item
+                    .Caption(T("Bank account"))
+                    .Position("1.6")
+                    .Action(
+                        nameof(BankAccountAdminController.Index),
+                        "BankAccountAdmin",
+                        new { area = "Codesanook.EventManagement" }
+                    )
+            );
+
         }
 
-        private void BuildChildMenu(NavigationItemBuilder menu) {
+        private void BuildChildMenuItems(NavigationItemBuilder menu) {
             menu.LinkToFirstChild(false);
 
+            // child menu
             menu.Add(
                 T("All events"),
                 "1.0",
@@ -40,6 +54,7 @@ namespace Codesanook.EventManagement {
                 )
              );
 
+            // child menu
             var contentItem = contentManager.New("Event");
             var contentItemMetadata = contentManager.GetItemMetadata(contentItem);
             menu.Add(

@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\BankAccountAdminController.cs" />
     <Compile Include="Controllers\EventAdminController.cs" />
     <Compile Include="Controllers\EventBookingAdminController.cs" />
     <Compile Include="Controllers\EventBookingController.cs" />
@@ -145,21 +146,30 @@
     <Compile Include="Models\EventBookingStatus.cs" />
     <Compile Include="Models\EventPart.cs" />
     <Compile Include="Models\EventPartRecord.cs" />
+    <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\UpcomingEventsPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="ShellEvent.cs" />
+    <Compile Include="ViewModels\BankAccountViewModel.cs" />
     <Compile Include="ViewModels\ConfirmedBookingViewModel.cs" />
     <Compile Include="ViewModels\EventBookingRegisterViewModel.cs" />
+    <Compile Include="ViewModels\EventBookingResultViewModel.cs" />
     <Compile Include="ViewModels\EventBookingViewModel.cs" />
+    <Compile Include="ViewModels\BankAccountIndexViewModel.cs" />
     <Compile Include="ViewModels\EventViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="Scripts\codesanook-event-management.js" />
+    <Content Include="Content\Images\bank-account-hover.png" />
+    <Content Include="Content\Images\bank-account.png" />
+    <Content Include="Content\Images\event-hover.png" />
+    <Content Include="Content\Images\event.png" />
+    <Content Include="packages.config" />
     <Content Include="Styles\codesanook-event-management.css" />
+    <Content Include="Styles\menu.event-admin..css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -274,7 +284,7 @@
     <Content Include="Views\Email.Template.ConfirmedBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\PaymentInformation.cshtml" />
+    <Content Include="Views\BankAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Email.Template.ConfirmedPayment.cshtml" />
@@ -284,6 +294,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Email.Template.FailedBooking.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BankAccountAdmin\_Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BankAccountAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BankAccountAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BankAccountAdmin\_BankAccountForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\BankAccountAdmin\Create.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

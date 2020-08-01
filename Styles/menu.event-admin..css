@@ -1,0 +1,17 @@
+/* icon default color #aec3ce
+*/
+.navicon-event {
+    background-image:url(../Content/Images/event.png) !important;
+}
+
+.navicon-event:hover {
+    background-image:url(../Content/Images/event-hover.png) !important;
+}
+
+.navicon-bank-account {
+    background-image:url(../Content/Images/bank-account.png) !important;
+}
+
+.navicon-bank-account:hover {
+    background-image:url(../Content/Images/bank-account-hover.png) !important;
+}
