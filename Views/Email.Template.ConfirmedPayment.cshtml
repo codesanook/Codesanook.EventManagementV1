@@ -1,13 +1,16 @@
 ﻿
 @using Codesanook.EventManagement.ViewModels
-@model ConfirmedBookingViewModel
+@{
+    var confirmedBooking = Model.ConfirmedBooking as ConfirmedBookingViewModel;
+}
+
 
 <p>
-    Dear FirstName LastName
+    Dear @confirmedBooking.UserProfile.FirstName @confirmedBooking.UserProfile.LastName
 </p>
 
 <p>
-    Thanks for your payment. 
+    Thanks for your payment.
 </p>
 <p>
     We will inform you immediately after we have verified the correctness of your payment.
@@ -17,17 +20,18 @@
     Your event information
 </h4>
 <ul>
-    <li>Event name: </li>
-    <li>Start: </li>
-    <li>Finish: </li>
-    <li>Location: </li>
+    <li>Event name: @confirmedBooking.Event.Title</li>
+    <li>Start:  @confirmedBooking.Event.StartDateTimeUtc.ToString()</li>
+    <li>Finish:  @confirmedBooking.Event.FinishDateTimeUtc.ToString()</li>
+    <li>Location:  @confirmedBooking.Event.Location</li>
 </ul>
+
 
 <p>
     Thanks,
 </p>
 
 <p>
-   company name Team
+    company name Team
 </p>
 

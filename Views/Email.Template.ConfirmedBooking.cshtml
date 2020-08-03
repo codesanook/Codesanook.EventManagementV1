@@ -1,9 +1,11 @@
 ﻿
 @using Codesanook.EventManagement.ViewModels
-@model ConfirmedBookingViewModel
+@{
+    var confirmedBooking = Model.ConfirmedBooking as ConfirmedBookingViewModel;
+}
 
 <p>
-    Dear FirstName LastName
+    Dear @confirmedBooking.UserProfile.FirstName @confirmedBooking.UserProfile.LastName
 </p>
 
 <p>
@@ -19,16 +21,18 @@
     Your event information
 </h4>
 <ul>
-    <li>Event name: </li>
-    <li>Start: </li>
-    <li>Finish: </li>
-    <li>Location: </li>
+    <li>Event name: @confirmedBooking.Event.Title</li>
+    <li>Start:  @confirmedBooking.Event.StartDateTimeUtc.ToString()</li>
+    <li>Finish:  @confirmedBooking.Event.FinishDateTimeUtc.ToString()</li>
+    <li>Location:  @confirmedBooking.Event.Location</li>
 </ul>
 
 <h4>Payment information:</h4>
 <p>
-    @* Render PaymentInformation shape which is PaymentInformation.cshtml *@
-    @Display(New.PaymentInformation())
+    @foreach (var account in confirmedBooking.BankAccounts)
+    {
+        @Display(New.BankAccount(BankAccount: account))
+    }
 </p>
 
 <p>
@@ -36,6 +40,6 @@
 </p>
 
 <p>
-   company name Team
+    company name Team
 </p>
 

@@ -1,9 +1,11 @@
 ﻿
 @using Codesanook.EventManagement.ViewModels
-@model ConfirmedBookingViewModel
+@{
+    var confirmedBooking = Model.ConfirmedBooking as ConfirmedBookingViewModel;
+}
 
 <p>
-    Dear FirstName LastName
+    Dear  @confirmedBooking.UserProfile.FirstName @confirmedBooking.UserProfile.LastName
 </p>
 
 <p>
@@ -11,18 +13,18 @@
 </p>
 <p>
     We would like to inform you that you payment is invalid and your booking is failed.
-    This is because reason *** replace with reason text text *** 
-    If you think the payment is valid, please contact our admin at ** replace with contact email *** 
+    This is because reason *** replace with reason text text ***
+    If you think the payment is valid, please contact our admin at ** replace with contact email ***
 </p>
 
 <h4>
     Your event information
 </h4>
 <ul>
-    <li>Event name: </li>
-    <li>Start: </li>
-    <li>Finish: </li>
-    <li>Location: </li>
+    <li>Event name: @confirmedBooking.Event.Title</li>
+    <li>Start:  @confirmedBooking.Event.StartDateTimeUtc.ToString()</li>
+    <li>Finish:  @confirmedBooking.Event.FinishDateTimeUtc.ToString()</li>
+    <li>Location:  @confirmedBooking.Event.Location</li>
 </ul>
 
 <p>
@@ -30,6 +32,6 @@
 </p>
 
 <p>
-   company name Team
+    company name Team
 </p>
 

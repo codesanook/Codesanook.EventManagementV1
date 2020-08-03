@@ -134,9 +134,24 @@ namespace Codesanook.EventManagement.Controllers {
                 eventBooking.Status = EventBookingStatus.VerifyingPayment;
             }
 
+            // Send an email
+            var user = authenticationService.GetAuthenticatedUser();
+            var accounts = session.Query<BankAccountRecord>().ToList();
+            var confirmbookingViewModel = new ConfirmedBookingViewModel {
+                Event = eventPart,
+                UserProfile = user.As<UserProfilePart>(),
+                BankAccounts = accounts
+            };
+
+            // !!! Folder lookup works only "Parts" folder !!!
+            var template = shapeFactory.Email_Template_ConfirmedPayment(
+                ConfirmedBooking: confirmbookingViewModel
+            );
+
+            SendEmail("Booking payment", template, user.Email);
+
             return RedirectToAction(nameof(Details), new { eventBookingId });
         }
-
 
         public ActionResult Register(int eventId, int? eventBookingId, int? numberOfAttendees) {
             var eventAttendees = GetEventAttendees(
@@ -216,36 +231,23 @@ namespace Codesanook.EventManagement.Controllers {
             eventBooking.Status = EventBookingStatus.WatingForPayment;
             eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
 
-            return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
-        }
-
-        private void SendConfirmedBookingEmail(EventBookingRecord eventBooking) {
+            // Send an email
             var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
             var user = authenticationService.GetAuthenticatedUser();
-
-            // Send an email
-            // !!! Folder lookup works only "Parts" folder !!!
-            ConfirmedBookingViewModel template = shapeFactory.Email_Template_ConfirmedBooking(
-                typeof(ConfirmedBookingViewModel)
-            );
-            template.Event = eventPart;
-            template.UserProfile = user.As<UserProfilePart>();
-
-            // Render a shape
-            var bodyHtml = shapeDisplay.Display(template);
-            var parameters = new Dictionary<string, object>
-            {
-                { "Subject", T("Booking confirmed").Text },
-                { "Body", bodyHtml }, // Already transformed to HTML with shapeDisplay.Display
-                { "Recipients",  user.Email } // CSV for multiple emails
+            var accounts = session.Query<BankAccountRecord>().ToList();
+            var confirmbookingViewModel = new ConfirmedBookingViewModel {
+                Event = eventPart,
+                UserProfile = user.As<UserProfilePart>(),
+                BankAccounts = accounts
             };
-
-            // The underlying class is SmtpMessageChannel
-            // It handles exception internally and not throw up to a caller.
-            messageService.Send(
-                DefaultEmailMessageChannelSelector.ChannelName,
-                parameters
+            // !!! Folder lookup works only "Parts" folder !!!
+            var template = shapeFactory.Email_Template_ConfirmedBooking(
+                ConfirmedBooking: confirmbookingViewModel
             );
+
+            SendEmail("Booking confirmed", template, user.Email);
+
+            return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
         }
 
         public ActionResult RegisterResult(int eventBookingId) {
@@ -295,6 +297,31 @@ namespace Codesanook.EventManagement.Controllers {
             };
 
             return result;
+        }
+
+        private void SendEmail(string subJect, dynamic template, string recipients) {
+            try {
+                // Send an email
+
+                // Render a shape
+                var bodyHtml = shapeDisplay.Display(template);
+                var parameters = new Dictionary<string, object>{
+                    { "Subject", subJect },
+                    { "Body", bodyHtml }, // The body is transformed to HTML by shapeDisplay.Display
+                    { "Recipients",  recipients } // CSV for multiple email
+                };
+
+                // The underlying class is SmtpMessageChannel
+                // It handles exception internally and not throw up to a caller.
+                messageService.Send(
+                    DefaultEmailMessageChannelSelector.ChannelName,
+                    parameters
+                );
+
+            }
+            catch (Exception e) {
+                throw (e);
+            }
         }
     }
 }

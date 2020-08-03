@@ -14,7 +14,7 @@
 
             case EventBookingStatus.WatingForPayment: className = "primary"; break;
 
-            case EventBookingStatus.Verifying: className = "info"; break;
+            case EventBookingStatus.VerifyingPayment: className = "info"; break;
 
             case EventBookingStatus.Successful: className = "success"; break;
 
@@ -42,7 +42,7 @@
             </div>
             <p class="mb-1">
                 @eventBooking.EventAttendees.Count() people
-                @eventBooking.GetTotalPrice() Bath
+                @eventBooking.TotalPrice Bath
             </p>
             <span class="badge badge-@GetClassStatus(eventBooking.Status)">
                 @eventBooking.Status.ToString()
