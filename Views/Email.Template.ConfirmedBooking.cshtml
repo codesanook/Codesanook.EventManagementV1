@@ -1,5 +1,4 @@
-﻿
-@using Codesanook.EventManagement.ViewModels
+﻿@using Codesanook.EventManagement.ViewModels
 @{
     var confirmedBooking = Model.ConfirmedBooking as ConfirmedBookingViewModel;
 }
@@ -40,6 +39,6 @@
 </p>
 
 <p>
-    company name Team
+    @confirmedBooking.SiteName
 </p>
 

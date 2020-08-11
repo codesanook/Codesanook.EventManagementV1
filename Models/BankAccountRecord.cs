@@ -15,6 +15,7 @@ namespace Codesanook.EventManagement.Models {
         public virtual string AccountName { get; set; }
 
         [DisplayName("Account number")]
+        [RegularExpression(@"\d{10}", ErrorMessage = "Format is number 10 digit")]
         [Required]
         public virtual string AccountNumber { get; set; }
 
