@@ -69,17 +69,10 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(BankAccountViewModel viewModel) {
+        public ActionResult Create([Bind(Exclude = nameof(BankAccountRecord.Id))] BankAccountRecord model) {
             if (!ModelState.IsValid) {
-                return View(viewModel);
+                return View(model);
             }
-
-            var model = new BankAccountRecord() {
-                AccountName = viewModel.AccountName,
-                AccountNumber = viewModel.AccountNumber,
-                BankName = viewModel.BankName,
-                BranchName = viewModel.BranchName
-            };
 
             repository.Create(model);
             return RedirectToAction(nameof(Index));
@@ -87,17 +80,11 @@ namespace Codesanook.EventManagement.Controllers {
 
         public ActionResult Edit(int id) {
             var model = repository.Get(id);
-            var viewModel = new BankAccountViewModel() {
-                AccountName = model.AccountName,
-                AccountNumber = model.AccountNumber,
-                BankName = model.BankName,
-                BranchName = model.BranchName
-            };
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, BankAccountViewModel viewModel) {
+        public ActionResult Edit(int id, [Bind(Exclude = nameof(BankAccountRecord.Id))] BankAccountRecord viewModel) {
             if (!ModelState.IsValid) {
                 return View(viewModel);
             }
@@ -107,7 +94,6 @@ namespace Codesanook.EventManagement.Controllers {
             model.AccountNumber = viewModel.AccountNumber;
             model.BankName = viewModel.BankName;
             model.BranchName = viewModel.BranchName;
-
             return RedirectToAction(nameof(Index));
         }
 
