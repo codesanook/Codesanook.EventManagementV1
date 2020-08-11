@@ -23,6 +23,7 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Users.Models;
+using Orchard.Core.Settings.Models;
 
 namespace Codesanook.EventManagement.Controllers {
     [Themed]
@@ -134,13 +135,16 @@ namespace Codesanook.EventManagement.Controllers {
                 eventBooking.Status = EventBookingStatus.VerifyingPayment;
             }
 
-            // Send an email
+            // Send an confirmation email
             var user = authenticationService.GetAuthenticatedUser();
             var accounts = session.Query<BankAccountRecord>().ToList();
+
+            var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
             var confirmbookingViewModel = new ConfirmedBookingViewModel {
                 Event = eventPart,
                 UserProfile = user.As<UserProfilePart>(),
-                BankAccounts = accounts
+                BankAccounts = accounts,
+                SiteName = siteSetting.SiteName,
             };
 
             // !!! Folder lookup works only "Parts" folder !!!
@@ -235,10 +239,12 @@ namespace Codesanook.EventManagement.Controllers {
             var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
             var user = authenticationService.GetAuthenticatedUser();
             var accounts = session.Query<BankAccountRecord>().ToList();
+            var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
             var confirmbookingViewModel = new ConfirmedBookingViewModel {
                 Event = eventPart,
                 UserProfile = user.As<UserProfilePart>(),
-                BankAccounts = accounts
+                BankAccounts = accounts,
+                SiteName = siteSetting.SiteName
             };
             // !!! Folder lookup works only "Parts" folder !!!
             var template = shapeFactory.Email_Template_ConfirmedBooking(
