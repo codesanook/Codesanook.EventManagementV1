@@ -140,20 +140,19 @@ namespace Codesanook.EventManagement.Controllers {
             var accounts = session.Query<BankAccountRecord>().ToList();
 
             var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var confirmbookingViewModel = new ConfirmedBookingViewModel {
+            var eventBookingEmailViewModel = new EventBookingEmailViewModel {
                 Event = eventPart,
                 UserProfile = user.As<UserProfilePart>(),
                 BankAccounts = accounts,
                 SiteName = siteSetting.SiteName,
             };
 
-            // !!! Folder lookup works only "Parts" folder !!!
+            // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
             var template = shapeFactory.Email_Template_ConfirmedPayment(
-                ConfirmedBooking: confirmbookingViewModel
+                EventBookingEmail: eventBookingEmailViewModel
             );
 
             SendEmail("Booking payment", template, user.Email);
-
             return RedirectToAction(nameof(Details), new { eventBookingId });
         }
 
@@ -240,7 +239,8 @@ namespace Codesanook.EventManagement.Controllers {
             var user = authenticationService.GetAuthenticatedUser();
             var accounts = session.Query<BankAccountRecord>().ToList();
             var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var confirmbookingViewModel = new ConfirmedBookingViewModel {
+
+            var eventBookingEmailViewModel = new EventBookingEmailViewModel {
                 Event = eventPart,
                 UserProfile = user.As<UserProfilePart>(),
                 BankAccounts = accounts,
@@ -248,11 +248,10 @@ namespace Codesanook.EventManagement.Controllers {
             };
             // !!! Folder lookup works only "Parts" folder !!!
             var template = shapeFactory.Email_Template_ConfirmedBooking(
-                ConfirmedBooking: confirmbookingViewModel
+                EventBookingEmail: eventBookingEmailViewModel
             );
 
             SendEmail("Booking confirmed", template, user.Email);
-
             return RedirectToAction(nameof(RegisterResult), new { eventBookingId });
         }
 
@@ -306,28 +305,20 @@ namespace Codesanook.EventManagement.Controllers {
         }
 
         private void SendEmail(string subJect, dynamic template, string recipients) {
-            try {
-                // Send an email
-
-                // Render a shape
-                var bodyHtml = shapeDisplay.Display(template);
-                var parameters = new Dictionary<string, object>{
+            // Render a shape
+            var bodyHtml = shapeDisplay.Display(template);
+            var parameters = new Dictionary<string, object>{
                     { "Subject", subJect },
                     { "Body", bodyHtml }, // The body is transformed to HTML by shapeDisplay.Display
                     { "Recipients",  recipients } // CSV for multiple email
                 };
 
-                // The underlying class is SmtpMessageChannel
-                // It handles exception internally and not throw up to a caller.
-                messageService.Send(
-                    DefaultEmailMessageChannelSelector.ChannelName,
-                    parameters
-                );
-
-            }
-            catch (Exception e) {
-                throw (e);
-            }
+            // The underlying class to send an email is SmtpMessageChannel
+            // It handles exception internally and not throw up to a caller.
+            messageService.Send(
+                DefaultEmailMessageChannelSelector.ChannelName,
+                parameters
+            );
         }
     }
 }

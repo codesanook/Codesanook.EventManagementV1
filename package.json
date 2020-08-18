@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "ReactJS project for codesanook-event-management",
     "scripts": {
-        "dev": "webpack --mode=development",
-        "watch": "webpack --mode=development --watch"
+        "watch": "webpack --mode=development --watch",
+        "dev": "webpack --mode=development"
     },
     "author": {
         "name": "Codesanook Team"

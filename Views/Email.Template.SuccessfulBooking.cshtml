@@ -1,10 +1,10 @@
 ﻿
 @using Codesanook.EventManagement.ViewModels
 @{
-    var confirmedBooking = Model.ConfirmedBooking as ConfirmedBookingViewModel;
+    var eventBookingEmail = Model.EventBookingEmail as EventBookingEmailViewModel;
 }
 <p>
-    Dear @confirmedBooking.UserProfile.FirstName @confirmedBooking.UserProfile.LastName
+    Dear @eventBookingEmail.UserProfile.FirstName @eventBookingEmail.UserProfile.LastName
 </p>
 
 <p>
@@ -18,10 +18,10 @@
     Your event information
 </h4>
 <ul>
-    <li>Event name: @confirmedBooking.Event.Title</li>
-    <li>Start:  @confirmedBooking.Event.StartDateTimeUtc.ToString()</li>
-    <li>Finish:  @confirmedBooking.Event.FinishDateTimeUtc.ToString()</li>
-    <li>Location:  @confirmedBooking.Event.Location</li>
+    <li>Event name: @eventBookingEmail.Event.Title</li>
+    <li>Start:  @eventBookingEmail.Event.StartDateTimeUtc.ToString()</li>
+    <li>Finish:  @eventBookingEmail.Event.FinishDateTimeUtc.ToString()</li>
+    <li>Location:  @eventBookingEmail.Event.Location</li>
 </ul>
 
 <p>
@@ -29,6 +29,6 @@
 </p>
 
 <p>
-    @confirmedBooking.SiteName
+    @eventBookingEmail.SiteName
 </p>
 

@@ -14,9 +14,8 @@
         VerifyingPayment, // After a user upload a slip.
 
         Successful, // A user's already paid a successful booking == verified == success
+        Refunded, // A user has successful booking but cancels to get money back.
         InvalidPayment, // Payment is invalid
-
         Cancelled, // A user does not finish booking and cancels a booking.
-        Refunded // A user has successful booking but cancels to get money back.
     }
 }

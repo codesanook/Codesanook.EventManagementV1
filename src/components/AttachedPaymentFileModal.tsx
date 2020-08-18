@@ -1,13 +1,11 @@
-// or less ideally
 import { Button, Modal } from 'react-bootstrap';
 import React, { useState } from 'react';
 
-
 interface IProps {
-    paymentConfirmationFileUrl: string;
+    attachedPaymentFileUrl: string;
 }
 
-const PaymentConfirmationModal = ({ paymentConfirmationFileUrl }): IProps => {
+const AttachedPaymentFileModal = ({ attachedPaymentFileUrl }): IProps => {
 
     const [show, setShow] = useState(false);
 
@@ -17,16 +15,16 @@ const PaymentConfirmationModal = ({ paymentConfirmationFileUrl }): IProps => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Show payment confirmation file
+                Show attached payment file
             </Button>
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title className="mx-auto pl-5">
-                        Payment confirmation file
+                        Confirm to 
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <img src={paymentConfirmationFileUrl} />
+                    <img src={attachedPaymentFileUrl} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -35,9 +33,7 @@ const PaymentConfirmationModal = ({ paymentConfirmationFileUrl }): IProps => {
                 </Modal.Footer>
             </Modal>
         </>
-
     );
-
 };
 
-export default PaymentConfirmationModal;
+export default AttachedPaymentFileModal;

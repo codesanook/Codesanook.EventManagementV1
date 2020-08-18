@@ -153,7 +153,7 @@
     <Compile Include="Services\EventService.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="ShellEvent.cs" />
-    <Compile Include="ViewModels\ConfirmedBookingViewModel.cs" />
+    <Compile Include="ViewModels\EventBookingEmailViewModel.cs" />
     <Compile Include="ViewModels\EventBookingRegisterViewModel.cs" />
     <Compile Include="ViewModels\EventBookingResultViewModel.cs" />
     <Compile Include="ViewModels\EventBookingViewModel.cs" />
@@ -289,13 +289,10 @@
     <Content Include="Views\Email.Template.ConfirmedPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Email.Template.SuccessfulBooking.cshtml" />
+    <Content Include="Views\Email.Template.RefundedBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Email.Template.FailedBooking.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\BankAccountAdmin\_Delete.cshtml" />
+    <Content Include="Views\Email.Template.InvalidPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BankAccountAdmin\Edit.cshtml" />
@@ -311,6 +308,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\BankAccountAdmin\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EventBookingAdmin\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EventBookingAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ReactInit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.CancelledBooking.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email.Template.SuccessfulBooking.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

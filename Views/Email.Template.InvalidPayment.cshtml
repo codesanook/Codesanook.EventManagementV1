@@ -1,19 +1,21 @@
-﻿@using Codesanook.EventManagement.ViewModels
+﻿
+@using Codesanook.EventManagement.ViewModels
 @{
     var eventBookingEmail = Model.EventBookingEmail as EventBookingEmailViewModel;
 }
 
 <p>
-    Dear @eventBookingEmail.UserProfile.FirstName @eventBookingEmail.UserProfile.LastName
+    Dear  @eventBookingEmail.UserProfile.FirstName @eventBookingEmail.UserProfile.LastName
 </p>
 
 <p>
     Thanks for booking an event with us.
 </p>
 <p>
-    Only one step to finish a booking.
-    Please transfer money with payment information in this email
-    and upload a payment slip in manage booking page.
+    We would like to inform you that you payment is invalid and your booking is failed.
+    This is because @eventBookingEmail.AdditionalInformation.InvalidPaymentReason.
+    If you think the payment is valid, please contact our admin at @eventBookingEmail.ContactEmail
+    or make a new payment and upload a new payment file.
 </p>
 
 <h4>

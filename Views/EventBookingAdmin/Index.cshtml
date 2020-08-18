@@ -1,0 +1,60 @@
+@using Codesanook.EventManagement.Controllers
+@using Codesanook.EventManagement.Models
+@model IReadOnlyCollection<EventBookingRecord>
+@{
+    Layout.Title = T("Manage event booking").ToString();
+    Style.Require("Bootstrap");
+}
+
+<div class="manage">
+    @Html.ActionLink(
+        T("Add a new account").ToString(),
+        "Create",
+        null,
+        new { @class = "button primaryAction" }
+    )
+</div>
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <fieldset>
+        <table class="items">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">@T("Status")</th>
+                    <th scope="col" class="text-center">@T("Actions")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventBooking in Model)
+                {
+                    <tr>
+                        <td>
+                            @eventBooking.Status
+                        </td>
+                        <td class="text-center">
+                            <ul class="action-links">
+                                <li class="action-link">
+                                    @Html.ActionLink(
+                                       T(nameof(EventBookingAdminController.Edit)).ToString(),
+                                       "Edit",
+                                       new { eventBooking.Id }
+                                    )
+                                </li>
+                                <li class="action-link">
+                                    @Html.ActionLink(
+                                       T(nameof(BankAccountAdminController.Delete)).ToString(),
+                                       "Delete",
+                                       new {  },
+                                       new { itemprop = "RemoveUrl UnsafeUrl" }
+                                    )
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Display(ViewBag.Pager)
+    </fieldset>
+}

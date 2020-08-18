@@ -1,0 +1,179 @@
+﻿@using Codesanook.EventManagement.Models
+@using Codesanook.EventManagement.Controllers
+@using Codesanook.AmazonS3.Controllers
+@model EventBookingRecord
+@{
+
+    Style.Require("Bootstrap").AtHead();
+    //Script.Require("Bootstrap").AtHead();
+    Script.Require("React").AtHead();
+    Script.Require("ReactDOM").AtHead();
+    Script.Include("codesanook-event-management.js").AtHead();
+    //Script.Include("codesanook-event-management.css").AtHead();
+
+    Layout.Title = T("Edit event booking").ToString();
+
+    var reactInitShape = New.ReactInit();
+    WorkContext.Layout.Footer.Add(reactInitShape);
+
+    // Get file URL from file key
+    var fileUrl = Url.Action(
+        nameof(FileController.GetFile),
+        "File",
+        new
+        {
+            area = "Codesanook.AmazonS3",
+            fileKey = Model.PaymentConfirmationAttachementFileKey
+        }
+    );
+
+    // Ending status is successful, refund and cancel
+    // To improve tracking status log
+}
+
+@using (Html.BeginFormAntiForgeryPost())
+{
+    <fieldset>
+        @Html.React(
+            "CodesanookEventManagement.AttachedPaymentFileModal",
+            new { attachedPaymentFileUrl = fileUrl }
+        )
+
+        <div>
+            Status @Model.Status
+        </div>
+
+        
+        <div>
+            @if (Model.Status == EventBookingStatus.VerifyingPayment)
+            {
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.Approve),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Approve",
+                          confirmationTitle = "Confirm to approve",
+                          confirmationMessage = "Are you sure you want to approve this booking?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.InvalidPayment),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Invalid payment",
+                          confirmationTitle = "Confirm to set payment to invalid",
+                          confirmationMessage = "Are you sure you want to set this payment to invalid?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+            }
+
+            @if (Model.Status == EventBookingStatus.InvalidPayment)
+            {
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.Approve),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Approve",
+                          confirmationTitle = "Confirm to approve",
+                          confirmationMessage = "Are you sure you want to approve this booking?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.InvalidPayment),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Invalid payment",
+                          confirmationTitle = "Confirm to set payment to invalid",
+                          confirmationMessage = "Are you sure you want to set this payment to invalid?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.Cancel),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Cancel payment",
+                          confirmationTitle = "Confirm to cancel booking",
+                          confirmationMessage = "Are you sure you want to cancel this booking?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+            }
+
+
+            @if (Model.Status == EventBookingStatus.Successful)
+            {
+                @Html.React(
+                      "CodesanookEventManagement.ConfirmationActionButton",
+                      new
+                      {
+                          actionUrl = Url.Action(
+                              nameof(EventBookingAdminController.Refund),
+                              new { id = Model.Id }
+                          ),
+                          formParameters = new
+                          {
+                              __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+                          },
+                          actionButtonMessage = "Approve",
+                          confirmationTitle = "Confirm to refund",
+                          confirmationMessage = "Are you sure you want to refund this booking?"
+                      },
+                      htmlTag: "span",
+                      containerClass: "a"
+                  )
+            }
+        </div>
+    </fieldset>
+}

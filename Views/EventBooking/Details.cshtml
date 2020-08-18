@@ -30,48 +30,49 @@
     );
 
     var className = "light";
-    var isControlUploadFile = true;
-    var isShowFileModal = true;
+    var shouldAllowUploadPaymentFile = true;
+    var shouldShowAttachedPaymentFileModal = true;
 
     switch (eventBooking.Status)
     {
-        case EventBookingStatus.Uncomfirmed:
-            className = "light";
-            isControlUploadFile = false;
-            isShowFileModal = false;
+        // Filter out unconfirm by user
+        //case EventBookingStatus.Uncomfirmed:
+        //    className = "light";
+        //    shouldAllowUploadPaymentFile = false;
+        //    shouldShowAttachedPaymentFileModal = false;
+        //    break;
+
+        // Filter out cancel by user, admin
+        case EventBookingStatus.Cancelled: // Cancel never hit upload payment file
+            className = "danger";
+            shouldAllowUploadPaymentFile = false; // nothing to do
+            shouldShowAttachedPaymentFileModal = false; // nothing to do
             break;
 
         case EventBookingStatus.WatingForPayment:
             className = "primary";
-            isShowFileModal = false;
+            shouldShowAttachedPaymentFileModal = false;
             break;
 
         case EventBookingStatus.VerifyingPayment:
             className = "info";
-            isControlUploadFile = false;
+            shouldAllowUploadPaymentFile = false;
             break;
 
         case EventBookingStatus.Successful:
             className = "success";
-            isControlUploadFile = false;
+            shouldAllowUploadPaymentFile = false;
             break;
 
-        case EventBookingStatus.InvalidPayment:
+        case EventBookingStatus.InvalidPayment: // end result => cancel
             className = "warning";
-            isControlUploadFile = false;
-            isShowFileModal = false;
+            shouldShowAttachedPaymentFileModal = true; // Allow to upload payment file again
             break;
 
-        case EventBookingStatus.Cancelled:
-            className = "danger";
-            isControlUploadFile = false;
-            isShowFileModal = false;
-            break;
-
-        case EventBookingStatus.Refunded:
+        case EventBookingStatus.Refunded: // end result
             className = "secondary";
-            isControlUploadFile = false;
-            isShowFileModal = false;
+            shouldAllowUploadPaymentFile = false; // No point to show payment file
+            shouldShowAttachedPaymentFileModal = false;
             break;
     }
 }
@@ -81,19 +82,19 @@
     <strong>Status</strong> @eventBooking.Status.ToString()
 </div>
 
-@if (isShowFileModal)
+@if (shouldShowAttachedPaymentFileModal)
 {
     @Html.React(
-            "CodesanookEventManagement.PaymentConfirmationModal",
-            new { paymentConfirmationFileUrl = fileUrl }
-        )
+        "CodesanookEventManagement.AttachedPaymentFileModal",
+        new { attachedPaymentFileUrl = fileUrl }
+    )
 }
 
 <a class="btn btn-link mb-2 mr-10" href="@Url.Action(nameof(EventBookingController.Index))">
     < Back
 </a>
 
-@if (isControlUploadFile)
+@if (shouldAllowUploadPaymentFile)
 {
     using (Html.BeginFormAntiForgeryPost(
             actionUrl,
@@ -115,8 +116,6 @@
     }
 }
 
-@*
-    Reuse EventShape
-*@
+@* Reuse EventShape *@
 @Display(Model.EventShape)
 
