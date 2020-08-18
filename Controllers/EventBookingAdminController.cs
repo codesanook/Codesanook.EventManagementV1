@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Codesanook.BasicUserProfile.Models;
@@ -11,7 +10,6 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Email.Services;
 using Orchard.Messaging.Services;
-using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
@@ -51,8 +49,8 @@ namespace Codesanook.EventManagement.Controllers {
                 .ToList();
 
             var pagerShape = shapeFactory
-                    .Pager(pager)
-                    .TotalItemCount(eventBookings.Count);
+                .Pager(pager)
+                .TotalItemCount(eventBookings.Count);
 
             ViewBag.Pager = pagerShape;
             return View(eventBookings);
@@ -69,6 +67,7 @@ namespace Codesanook.EventManagement.Controllers {
             // TODO update to Successful status
             // TODO Email to a user that booking has been approve
             var eventBooking = repository.Get(id);
+
             var eventPart = contentManager.Get<EventPart>(eventBooking.Id);
             var userPart = eventPart.As<UserPart>();
             var userProfilePart = eventPart.As<UserProfilePart>();

@@ -3,15 +3,13 @@
 @using Codesanook.AmazonS3.Controllers
 @model EventBookingRecord
 @{
+    Layout.Title = T("Edit event booking").ToString();
 
     Style.Require("Bootstrap").AtHead();
-    //Script.Require("Bootstrap").AtHead();
     Script.Require("React").AtHead();
     Script.Require("ReactDOM").AtHead();
     Script.Include("codesanook-event-management.js").AtHead();
-    //Script.Include("codesanook-event-management.css").AtHead();
-
-    Layout.Title = T("Edit event booking").ToString();
+    Style.Include("codesanook-event-management.css").AtHead();
 
     var reactInitShape = New.ReactInit();
     WorkContext.Layout.Footer.Add(reactInitShape);
@@ -150,7 +148,6 @@
                       containerClass: "a"
                   )
             }
-
 
             @if (Model.Status == EventBookingStatus.Successful)
             {

@@ -51,7 +51,6 @@ const ConfirmationActionButton = ({
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleConfirmedAction = () => {
-        location.href = actionUrl;
         post(actionUrl, formParameters);  
     };
 

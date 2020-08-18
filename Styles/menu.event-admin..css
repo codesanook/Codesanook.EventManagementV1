@@ -15,3 +15,12 @@
 .navicon-bank-account:hover {
     background-image:url(../Content/Images/bank-account-hover.png) !important;
 }
+
+
+.navicon-event-booking {
+    background-image:url(../Content/Images/event.png) !important;
+}
+
+.navicon-event-booking:hover {
+    background-image:url(../Content/Images/event-hover.png) !important;
+}

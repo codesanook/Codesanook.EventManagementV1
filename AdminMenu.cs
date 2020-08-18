@@ -8,13 +8,12 @@ namespace Codesanook.EventManagement {
     // Document https://docs.orchardproject.net/en/latest/Documentation/Adding-admin-menu-items/
     public class AdminMenu : INavigationProvider {
         private readonly IContentManager contentManager;
+        public Localizer T { get; set; }
 
         public AdminMenu(IContentManager contentManager) {
             this.contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
-
-        public Localizer T { get; set; }
 
         // For admin menu
         public string MenuName => "admin";
@@ -26,18 +25,20 @@ namespace Codesanook.EventManagement {
                 .AddImageSet("event")
                 .Add(T("Event"), "1.5", BuildChildMenuItems);
 
+            // TODO add event booking (admin) at 1.6
+
             builder
                 // only 1 level menu
-                .Add(item => item
-                    .Caption(T("Bank account"))
-                    .Position("1.6")
-                    .Action(
-                        nameof(BankAccountAdminController.Index),
-                        "BankAccountAdmin",
-                        new { area = "Codesanook.EventManagement" }
-                    )
-            );
-
+                .Add(
+                    item => item
+                        .Caption(T("Bank account"))
+                        .Position("1.7")
+                        .Action(
+                            actionName: nameof(BankAccountAdminController.Index),
+                            controllerName: "BankAccountAdmin",
+                            new { area = "Codesanook.EventManagement" }
+                        )
+                );
         }
 
         private void BuildChildMenuItems(NavigationItemBuilder menu) {
@@ -57,6 +58,7 @@ namespace Codesanook.EventManagement {
             // child menu
             var contentItem = contentManager.New("Event");
             var contentItemMetadata = contentManager.GetItemMetadata(contentItem);
+
             menu.Add(
                 T("New event"),
                 "1.1",
