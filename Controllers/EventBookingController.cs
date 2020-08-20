@@ -88,7 +88,6 @@ namespace Codesanook.EventManagement.Controllers {
             var session = transactionManager.GetSession();
             var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
             var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
-            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
 
             // Build display for event content item
             var eventShape = contentManager.BuildDisplay(eventPart.ContentItem);

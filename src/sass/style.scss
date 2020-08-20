@@ -1,1 +1,84 @@
 // Custom Sass style sheet here
+.btn-action {
+    margin-right: 10px;
+
+    button {
+        background: none !important;
+    }
+}
+
+.btn-action.btn-primary {
+
+    button {
+        color: #fff !important;
+        background-color: #007bff !important;
+        border-color: #007bff !important;
+    }
+}
+
+.btn-action.btn-secondary {
+
+    button {
+        color: #fff !important;
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+    }
+}
+
+.btn-action.btn-success {
+
+    button {
+        color: #fff !important;
+        background-color: #28a745 !important;
+        border-color: #28a745 !important;
+    }
+}
+
+.btn-action.btn-danger {
+
+    button {
+        color: #fff !important;
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+}
+
+.btn-action.btn-warning {
+
+    button {
+        color: #212529 !important;
+        background-color: #ffc107 !important;
+        border-color: #ffc107 !important;
+    }
+}
+
+.btn-action > .btn-primary {
+    color: #fff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.btn-action > .btn-secondary {
+    color: #fff !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.btn-action > .btn-success {
+    color: #fff !important;
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.btn-action > .btn-danger {
+    color: #fff !important;
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+.btn-action > .btn-warning {
+    color: #212529 !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}
+

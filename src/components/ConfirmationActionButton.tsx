@@ -64,8 +64,10 @@ const ConfirmationActionButton = ({
                 <Modal.Header closeButton>
                     <Modal.Title className="mx-auto pl-5"> {confirmationTitle} </Modal.Title>
                 </Modal.Header>
-                <Modal.Body> {confirmationMessage} </Modal.Body>
-                <Modal.Footer>
+                <Modal.Body>
+                    {confirmationMessage}
+                </Modal.Body>
+                <Modal.Footer className="btn-action">
                     <Button variant="primary" onClick={handleConfirmedAction}>
                         OK
                     </Button>

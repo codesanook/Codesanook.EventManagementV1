@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Codesanook.BasicUserProfile.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
+using NHibernate.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
@@ -18,6 +19,7 @@ using Orchard.Users.Models;
 namespace Codesanook.EventManagement.Controllers {
     [Admin]
     public class EventBookingAdminController : Controller {
+        private readonly ITransactionManager transactionManager;
         private readonly ISiteService siteService;
         private readonly dynamic shapeFactory;
         private readonly IRepository<EventBookingRecord> repository;
@@ -26,6 +28,7 @@ namespace Codesanook.EventManagement.Controllers {
         private readonly IMessageService messageService;
 
         public EventBookingAdminController(
+             ITransactionManager transactionManager,
             ISiteService siteService,
             IShapeFactory shapeFactory,
             IRepository<EventBookingRecord> repository,
@@ -33,6 +36,7 @@ namespace Codesanook.EventManagement.Controllers {
             IShapeDisplay shapeDisplay,
             IMessageService messageService
         ) {
+            this.transactionManager = transactionManager;
             this.siteService = siteService;
             this.shapeFactory = shapeFactory;
             this.repository = repository;
@@ -65,19 +69,11 @@ namespace Codesanook.EventManagement.Controllers {
         //[ValidateAntiForgeryTokenOrchard(enabled:false)]
         public ActionResult Approve(int id) {
             // TODO update to Successful status
-            // TODO Email to a user that booking has been approve
-            var eventBooking = repository.Get(id);
-
-            var eventPart = contentManager.Get<EventPart>(eventBooking.Id);
-            var userPart = eventPart.As<UserPart>();
-            var userProfilePart = eventPart.As<UserProfilePart>();
-
-            var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var eventBookingEmailViewModel = new EventBookingEmailViewModel {
-                Event = eventPart,
-                UserProfile = userProfilePart,
-                SiteName = siteSetting.SiteName,
-            };
+            // TODO Email to a user that booking has been approve\
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(id);
+            var eventBookingEmailViewModel = SetEventBookingEmailViewModel(eventBooking);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
 
             // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
             var template = shapeFactory.Email_Template_SuccessfulBooking(
@@ -85,24 +81,21 @@ namespace Codesanook.EventManagement.Controllers {
             );
 
             SendEmail("Successful booking", template, userPart.Email);
-            return RedirectToAction(nameof(Edit), new { id = id });
+
+            eventBooking.Status = EventBookingStatus.Successful;
+            session.Save(eventBooking);
+
+            return RedirectToAction(nameof(Edit), new { id });
         }
 
         [HttpPost]
         public ActionResult Refund(int id) {
             // TODO update to Refund status 
             // TODO Email to a user that booking has been refunded
-            var eventBooking = repository.Get(id);
-            var eventPart = contentManager.Get<EventPart>(eventBooking.Id);
-            var userPart = eventPart.As<UserPart>();
-            var userProfilePart = eventPart.As<UserProfilePart>();
-
-            var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var eventBookingEmailViewModel = new EventBookingEmailViewModel {
-                Event = eventPart,
-                UserProfile = userProfilePart,
-                SiteName = siteSetting.SiteName,
-            };
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(id);
+            var eventBookingEmailViewModel = SetEventBookingEmailViewModel(eventBooking);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
 
             // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
             var template = shapeFactory.Email_Template_RefundedBooking(
@@ -110,24 +103,27 @@ namespace Codesanook.EventManagement.Controllers {
             );
 
             SendEmail("Refund booking", template, userPart.Email);
-            return RedirectToAction(nameof(Edit), new { id = id });
+            eventBooking.Status = EventBookingStatus.Refunded;
+            session.Save(eventBooking);
+
+            return RedirectToAction(nameof(Edit), new { id });
         }
 
         [HttpPost]
         public ActionResult InvalidPayment(int id) {
             // TODO update to InvalidPayment status 
             // TODO Email to a user that booking has invalid payment and try a new payment
-            var eventBooking = repository.Get(id);
-            var eventPart = contentManager.Get<EventPart>(eventBooking.Id);
-            var userPart = eventPart.As<UserPart>();
-            var userProfilePart = eventPart.As<UserProfilePart>();
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(id);
+            var eventBookingEmailViewModel = SetEventBookingEmailViewModel(eventBooking);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
 
-            var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var eventBookingEmailViewModel = new EventBookingEmailViewModel {
-                Event = eventPart,
-                UserProfile = userProfilePart,
-                SiteName = siteSetting.SiteName,
-            };
+            dynamic MyDynamic = new System.Dynamic.ExpandoObject();
+            MyDynamic.InvalidPaymentReason = "";
+            eventBookingEmailViewModel.AdditionalInformation = MyDynamic;
+
+            var accounts = session.Query<BankAccountRecord>().ToList();
+            eventBookingEmailViewModel.BankAccounts = accounts;
 
             // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
             var template = shapeFactory.Email_Template_InvalidPayment(
@@ -135,7 +131,10 @@ namespace Codesanook.EventManagement.Controllers {
             );
 
             SendEmail("Invalid payment", template, userPart.Email);
-            return RedirectToAction(nameof(Edit), new { id = id });
+            eventBooking.Status = EventBookingStatus.InvalidPayment;
+            session.Save(eventBooking);
+
+            return RedirectToAction(nameof(Edit), new { id });
         }
 
         [HttpPost]
@@ -143,10 +142,28 @@ namespace Codesanook.EventManagement.Controllers {
             // TODO update to Cancel status 
             // TODO Email to a user that booking has been cancel
             // EventBookingStatus.Cancel 
-            var eventBooking = repository.Get(id);
-            var eventPart = contentManager.Get<EventPart>(eventBooking.Id);
-            var userPart = eventPart.As<UserPart>();
-            var userProfilePart = eventPart.As<UserProfilePart>();
+            var session = transactionManager.GetSession();
+            var eventBooking = session.Get<EventBookingRecord>(id);
+            var eventBookingEmailViewModel = SetEventBookingEmailViewModel(eventBooking);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
+            // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
+            var template = shapeFactory.Email_Template_CancelledBooking(
+                EventBookingEmail: eventBookingEmailViewModel
+            );
+
+            SendEmail("Booking cancelled", template, userPart.Email);
+            eventBooking.Status = EventBookingStatus.Cancelled;
+            session.Save(eventBooking);
+
+            return RedirectToAction(nameof(Edit), new { id });
+        }
+
+
+        private EventBookingEmailViewModel SetEventBookingEmailViewModel(EventBookingRecord eventBooking) {
+
+            var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
+            var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
+            var userProfilePart = userPart.As<UserProfilePart>();
 
             var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
             var eventBookingEmailViewModel = new EventBookingEmailViewModel {
@@ -155,13 +172,7 @@ namespace Codesanook.EventManagement.Controllers {
                 SiteName = siteSetting.SiteName,
             };
 
-            // !!! Folder lookup for shape template name works only inside "Parts" folder !!!
-            var template = shapeFactory.Email_Template_InvalidPayment(
-                EventBookingEmail: eventBookingEmailViewModel
-            );
-
-            SendEmail("Booking cancelled", template, userPart.Email);
-            return RedirectToAction(nameof(Edit), new { id = id });
+            return eventBookingEmailViewModel;
         }
 
         private void SendEmail(string subJect, dynamic template, string recipients) {

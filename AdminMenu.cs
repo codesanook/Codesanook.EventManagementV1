@@ -26,6 +26,18 @@ namespace Codesanook.EventManagement {
                 .Add(T("Event"), "1.5", BuildChildMenuItems);
 
             // TODO add event booking (admin) at 1.6
+            builder
+               // only 1 level menu
+               .Add(
+                   item => item
+                       .Caption(T("Event booking"))
+                       .Position("1.6")
+                       .Action(
+                           actionName: nameof(EventBookingAdminController.Index),
+                           controllerName: "EventBookingAdmin",
+                           new { area = "Codesanook.EventManagement" }
+                       )
+               );
 
             builder
                 // only 1 level menu
