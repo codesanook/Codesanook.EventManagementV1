@@ -52,6 +52,10 @@
 
             @if (Model.Status == EventBookingStatus.InvalidPayment)
             {
+                @Html.Partial("_ButtonActionApprove", Model)
+
+                @Html.Partial("_ButtonActionInvalidPayment", Model)
+
                 @Html.Partial("_ButtonActionCancel", Model)
             }
 
