@@ -64,7 +64,7 @@ const ConfirmationActionButton = ({
                 <Modal.Header closeButton>
                     <Modal.Title className="mx-auto pl-5"> {confirmationTitle} </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="text-center">
                     {confirmationMessage}
                 </Modal.Body>
                 <Modal.Footer className="btn-action">

@@ -325,7 +325,16 @@
     <Content Include="Views\Email.Template.SuccessfulBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EventBookingAdmin\_ButtonAction.cshtml" />
+    <Content Include="Views\EventBookingAdmin\_ButtonActionApprove.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EventBookingAdmin\_ButtonActionInvalidPayment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EventBookingAdmin\_ButtonActionCancel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EventBookingAdmin\_ButtonActionRefund.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

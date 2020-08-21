@@ -1,0 +1,22 @@
+﻿@using Codesanook.EventManagement.Controllers
+@Html.React(
+ "CodesanookEventManagement.ConfirmationActionButton",
+ new
+ {
+     actionUrl = Url.Action(
+         nameof(EventBookingAdminController.Approve),
+         new { id = Model.Id }
+     ),
+     formParameters = new
+     {
+         __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+     },
+     actionButtonMessage = "Approve",
+     confirmationTitle = "Confirm to approve",
+     confirmationMessage = "Are you sure you want to approve this booking?"
+ },
+ htmlTag: "span",
+ containerClass: "btn-action btn-primary"
+)
+
+   

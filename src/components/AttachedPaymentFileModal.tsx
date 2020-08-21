@@ -20,7 +20,7 @@ const AttachedPaymentFileModal = ({ attachedPaymentFileUrl }): IProps => {
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title className="mx-auto pl-5">
-                        Confirm to 
+                        Payment file
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

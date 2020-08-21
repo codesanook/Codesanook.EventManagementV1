@@ -1,0 +1,22 @@
+﻿@using Codesanook.EventManagement.Controllers
+@Html.React(
+ "CodesanookEventManagement.ConfirmationActionButton",
+ new
+ {
+     actionUrl = Url.Action(
+         nameof(EventBookingAdminController.Refund),
+         new { id = Model.Id }
+     ),
+     formParameters = new
+     {
+         __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+     },
+     actionButtonMessage = "Refund",
+     confirmationTitle = "Confirm to refund",
+     confirmationMessage = "Are you sure you want to refund this booking?"
+ },
+ htmlTag: "span",
+ containerClass: "btn-action btn-secondary"
+)
+
+   

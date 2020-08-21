@@ -1,5 +1,6 @@
 ﻿@using Codesanook.EventManagement.Models
 @using Codesanook.AmazonS3.Controllers
+@using Codesanook.EventManagement.Controllers
 @model EventBookingRecord
 @{
     Layout.Title = T("Edit event booking").ToString();
@@ -28,6 +29,9 @@
     // To improve tracking status log
 }
 
+<a class="btn-link" href="@Url.Action(nameof(EventBookingAdminController.Index))">
+    < Back
+</a>
 @using (Html.BeginFormAntiForgeryPost())
 {
     <fieldset>
@@ -37,9 +41,24 @@
         )
         <div>
             Status @Model.Status
-        </div>        
+        </div>
         <div>
-            @Html.Partial("_ButtonAction", Model)            
+            @if (Model.Status == EventBookingStatus.VerifyingPayment)
+            {
+                @Html.Partial("_ButtonActionApprove", Model)
+
+                @Html.Partial("_ButtonActionInvalidPayment", Model)
+            }
+
+            @if (Model.Status == EventBookingStatus.InvalidPayment)
+            {
+                @Html.Partial("_ButtonActionCancel", Model)
+            }
+
+            @if (Model.Status == EventBookingStatus.Successful)
+            {
+                @Html.Partial("_ButtonActionRefund", Model)
+            }
         </div>
     </fieldset>
 }

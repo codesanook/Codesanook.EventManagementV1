@@ -1,0 +1,22 @@
+﻿@using Codesanook.EventManagement.Controllers
+@Html.React(
+ "CodesanookEventManagement.ConfirmationActionButton",
+ new
+ {
+     actionUrl = Url.Action(
+         nameof(EventBookingAdminController.InvalidPayment),
+         new { id = Model.Id }
+     ),
+     formParameters = new
+     {
+         __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard().ToString()
+     },
+     actionButtonMessage = "Invalid payment",
+     confirmationTitle = "Confirm to set payment to invalid",
+     confirmationMessage = "Are you sure you want to set this payment to invalid?"
+ },
+ htmlTag: "span",
+ containerClass: "btn-action btn-warning"
+)
+
+   
