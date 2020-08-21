@@ -10,7 +10,7 @@
     // TODO map to string with localization
     public enum EventBookingStatus {
         Uncomfirmed, // A user hasn't click confirm.
-        WatingForPayment, // Waiting for the payment after click confirm.
+        WaitingForPayment, // Waiting for the payment after click confirm.
         VerifyingPayment, // After a user upload a slip.
 
         Successful, // A user's already paid a successful booking == verified == success

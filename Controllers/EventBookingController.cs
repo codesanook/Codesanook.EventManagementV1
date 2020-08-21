@@ -230,7 +230,7 @@ namespace Codesanook.EventManagement.Controllers {
         public ActionResult RegisterConfirm(int eventBookingId, FormCollection form) {
             var session = transactionManager.GetSession();
             var eventBooking = session.Get<EventBookingRecord>(eventBookingId);
-            eventBooking.Status = EventBookingStatus.WatingForPayment;
+            eventBooking.Status = EventBookingStatus.WaitingForPayment;
             eventBooking.BookingDateTimeUtc = DateTime.UtcNow;
 
             // Send an email
