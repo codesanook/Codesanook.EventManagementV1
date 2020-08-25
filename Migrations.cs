@@ -1,6 +1,5 @@
 ﻿using System;
 using Codesanook.EventManagement.Models;
-using NHibernate.Mapping;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
@@ -79,7 +78,11 @@ namespace Codesanook.EventManagement {
                 builder => builder
                     .WithPart("EventPart")
                     .WithPart("TitlePart")
-                    .WithPart("BodyPart")
+                    .WithPart(
+                        "BodyPart",
+                        config => config
+                            .WithSetting("BodyTypePartSettings.Flavor", "html")
+                    )
                     .WithPart(
                         "CommonPart",
                         config => config
