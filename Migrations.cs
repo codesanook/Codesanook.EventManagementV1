@@ -95,7 +95,7 @@ namespace Codesanook.EventManagement {
                         .WithSetting("AutorouteSettings.AllowCustomPattern", "False")
                         .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
                         .WithSetting("AutorouteSettings.PatternDefinitions",
-                            "[{'Name': 'Event details by id', 'Pattern': 'events/{Content.Id}', 'Description': 'events/event-id'}]"
+                            "[{'Name': 'Event details by id', 'Pattern': 'Events/{Content.Id}', 'Description': 'events/event-id'}]"
                         )
                     )
                     .Draftable()
@@ -187,9 +187,7 @@ namespace Codesanook.EventManagement {
             titlePart.Title = "Events";
 
             var autoRoutePart = projectionPage.As<AutoroutePart>();
-            autoRoutePart.UseCustomPattern = true;
-            autoRoutePart.CustomPattern = "{Content.Slug}";
-            autoRoutePart.DisplayAlias = autorouteService.Value.GenerateAlias(autoRoutePart);
+            autoRoutePart.DisplayAlias = titlePart.Title;
             autorouteService.Value.PublishAlias(autoRoutePart);
 
             // Create admin menu
