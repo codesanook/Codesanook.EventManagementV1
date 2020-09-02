@@ -120,12 +120,8 @@ namespace Codesanook.EventManagement {
 
             CreateEventBookingRecordTable();
             CreateEventAttendeeRecordTable();
-            return 1;
-        }
-
-        public int UpdateFrom1() {
             CreateBankAccountRecordTable();
-            return 2;
+            return 1;
         }
 
         private void CreateEventBookingRecordTable() {
