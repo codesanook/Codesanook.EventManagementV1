@@ -1,4 +1,5 @@
-﻿// Install React.Core install-package React.Core -version 5.0.0
+﻿// How to integrate React server side rendering
+// Install React.Core install-package React.Core -version 5.0.0
 // Add <add namespace="Codesanook.ReactJS" /> to <system.web.webPages.razor> in Web.config root level
 // Add Script.Require("React").AtHead(), ReactDOM and our script in a module cshtml
 // Add @Html.ReactInitJavaScript() in bottom of Document.cshtml to make sure our React script load already
