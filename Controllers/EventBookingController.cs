@@ -10,7 +10,6 @@ using Amazon.S3.Model;
 using Codesanook.AmazonS3.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
-using Codesanook.BasicUserProfile.Models;
 using NHibernate.Linq;
 using NHibernate.Util;
 using Orchard.ContentManagement;
@@ -24,6 +23,7 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Users.Models;
 using Orchard.Core.Settings.Models;
+using Codesanook.Users.Models;
 
 namespace Codesanook.EventManagement.Controllers {
     [Themed]
@@ -141,7 +141,7 @@ namespace Codesanook.EventManagement.Controllers {
             var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
             var eventBookingEmailViewModel = new EventBookingEmailViewModel {
                 Event = eventPart,
-                UserProfile = user.As<UserProfilePart>(),
+                UserProfile = user.As<BasicUserProfilePart>(),
                 BankAccounts = accounts,
                 SiteName = siteSetting.SiteName,
             };
@@ -241,7 +241,7 @@ namespace Codesanook.EventManagement.Controllers {
 
             var eventBookingEmailViewModel = new EventBookingEmailViewModel {
                 Event = eventPart,
-                UserProfile = user.As<UserProfilePart>(),
+                UserProfile = user.As<BasicUserProfilePart>(),
                 BankAccounts = accounts,
                 SiteName = siteSetting.SiteName
             };

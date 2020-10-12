@@ -189,10 +189,6 @@
       <Project>{f7a05b63-9397-4c6a-b625-edd5d0d55675}</Project>
       <Name>Codesanook.AmazonS3</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Codesanook.BasicUserProfile\Codesanook.BasicUserProfile.csproj">
-      <Project>{20b8d23b-0724-48b3-871b-e5b70bcd6f41}</Project>
-      <Name>Codesanook.BasicUserProfile</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Codesanook.Common\Codesanook.Common.csproj">
       <Project>{7104E4B7-0FDC-4734-A812-1C6A8F71635D}</Project>
       <Name>Codesanook.Common</Name>
@@ -200,6 +196,10 @@
     <ProjectReference Include="..\Codesanook.ReactJS\Codesanook.ReactJS.csproj">
       <Project>{2a3ac19b-d914-4bce-a691-f92f1851a402}</Project>
       <Name>Codesanook.ReactJS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codesanook.Users\Codesanook.Users.csproj">
+      <Project>{c5d3ba12-cdb8-48ba-a841-c90f4a4896af}</Project>
+      <Name>Codesanook.Users</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>

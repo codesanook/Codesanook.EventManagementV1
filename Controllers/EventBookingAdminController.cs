@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Codesanook.BasicUserProfile.Models;
 using Codesanook.EventManagement.Models;
 using Codesanook.EventManagement.ViewModels;
+using Codesanook.Users.Models;
 using NHibernate.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
@@ -163,7 +163,7 @@ namespace Codesanook.EventManagement.Controllers {
 
             var eventPart = contentManager.Get<EventPart>(eventBooking.Event.Id);
             var userPart = contentManager.Get<UserPart>(eventBooking.User.Id);
-            var userProfilePart = userPart.As<UserProfilePart>();
+            var userProfilePart = userPart.As<BasicUserProfilePart>();
 
             var siteSetting = siteService.GetSiteSettings().As<SiteSettingsPart>();
             var eventBookingEmailViewModel = new EventBookingEmailViewModel {
