@@ -88,15 +88,17 @@ namespace Codesanook.EventManagement {
                         config => config
                             .WithSetting("DateEditorSettings.ShowDateEditor", "False")
                             .WithSetting("OwnerEditorSettings.ShowOwnerEditor", "False")
-
                     )
                     .WithPart("PublishLaterPart")
-                    .WithPart("AutoroutePart", config => config
-                        .WithSetting("AutorouteSettings.AllowCustomPattern", "False")
-                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
-                        .WithSetting("AutorouteSettings.PatternDefinitions",
-                            "[{'Name': 'Event details by id', 'Pattern': 'Events/{Content.Id}', 'Description': 'events/event-id'}]"
-                        )
+                    .WithPart("AutoroutePart",
+                        part => part
+                            .WithSetting("AutorouteSettings.AllowCustomPattern", "False")
+                            .WithSetting("AutorouteSettings.AllowSetAsHomePage", "False")
+                            .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "False")
+                            .WithSetting(
+                                "AutorouteSettings.PatternDefinitions",
+                                "[{'Name': 'Event details by id', 'Pattern': 'Events/{Content.Id}', 'Description': 'events/event-id'}]"
+                            )
                     )
                     .Draftable()
             );
